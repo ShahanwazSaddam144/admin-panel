@@ -1,99 +1,109 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Main from "../MainApp/Main";
 
-const Login = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
+export default function LoginPage() {
+  const router = useRouter();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    const name = document.getElementById("Name").value;
-    const password = document.getElementById("Password").value;
-    const result = document.getElementById("Result");
+  const handleLogin = async () => {
+    setLoading(true);
+    setError("");
 
-    const user = process.env.NEXT_PUBLIC_NAME;
-    const pass = process.env.NEXT_PUBLIC_PASSWORD;
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("pass").value;
 
-    if (name === user && password === pass) {
-      result.innerText = "Access Granted";
-      result.classList.remove("text-red-500");
-      result.classList.add("text-green-500");
+    try {
+      const res = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, pass }),
+      });
 
-      setTimeout(() => setLoggedIn(true), 2000);
-    } else {
-      result.innerText = "Invalid Credentials";
-      result.classList.remove("text-green-500");
-      result.classList.add("text-red-500");
+      const data = await res.json();
 
-      setTimeout(() => (result.innerText = ""), 2500);
+      if (res.ok) {
+        router.replace("/MainApp");
+      } else {
+        setError(data.message || "Login failed");
+      }
+    } catch {
+      setError("Server not reachable");
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loggedIn) {
-    return <Main />;
-  }
-
   return (
-    <section id="Login-Section" className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center px-4">
+    <section className="min-h-screen flex flex-col md:flex-row">
+      
+      {/* Left Side - Logo & Info */}
+      <div className="md:w-1/2 bg-blue-600 flex flex-col items-center justify-center text-white p-10 relative overflow-hidden">
+        {/* Decorative shapes */}
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-500 rounded-full opacity-40 animate-pulse"></div>
+        <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-blue-400 rounded-full opacity-30 animate-pulse"></div>
 
-      {/* Logo */}
-      <div className="mb-6 animate-fadeIn">
-        <Image
-          src="/butt.png"
-          alt="Logo"
-          width={150}
-          height={150}
-          className="drop-shadow-lg rounded-full"
-        />
-      </div>
-
-      {/* Login Card */}
-      <div className="w-full max-w-md bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/20 text-white animate-slideUp">
-
-        {/* Title */}
-        <h2 className="text-3xl font-bold text-center mb-6 tracking-wide">
-          Login to Butt Networks
-        </h2>
-
-        {/* Inputs */}
-        <div className="space-y-5">
-          <input
-            type="text"
-            placeholder="Enter Name"
-            id="Name"
-            className="w-full px-4 py-3 rounded-lg bg-white/20 placeholder-gray-300 
-            border border-white/20 focus:outline-none focus:border-blue-400 transition"
+        <div className="relative z-10 text-center md:text-left max-w-sm">
+          <Image
+            src="/butt.png"
+            alt="Butt Networks"
+            width={150}
+            height={150}
+            className="mx-auto md:mx-0 rounded-full drop-shadow-2xl mb-6"
           />
 
-          <input
-            type="password"
-            placeholder="Enter Password"
-            id="Password"
-            className="w-full px-4 py-3 rounded-lg bg-white/20 placeholder-gray-300 
-            border border-white/20 focus:outline-none focus:border-blue-400 transition"
-          />
-
-          {/* Login Button */}
-          <button
-            className="w-full bg-blue-600 py-3 rounded-lg text-lg font-semibold 
-            hover:bg-blue-700 transition shadow-lg hover:shadow-blue-700/40 active:scale-95"
-            onClick={handleLogin}
-          >
-            Login
-          </button>
+          <h1 className="text-4xl font-bold mb-4">
+            Welcome to <span className="text-yellow-300">Butt Networks</span>
+          </h1>
+          <p className="text-lg text-white/90">
+            Securely manage your projects and workflows. Log in to access your dashboard and all features.
+          </p>
         </div>
-
-        {/* Result Text */}
-        <p id="Result" className="mt-4 text-center font-semibold text-lg"></p>
       </div>
 
-      {/* Footer */}
-      <p className="text-gray-300 mt-6 tracking-wide text-sm">
-        © {new Date().getFullYear()} Butt Networks • Secure Access Panel
-      </p>
+      {/* Right Side - Login Form */}
+      <div className="md:w-1/2 flex items-center justify-center p-10">
+        <div className="w-full max-w-md bg-white/10 backdrop-blur-md p-10 rounded-3xl shadow-2xl border border-white/20 text-white animate-slideUp">
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8 tracking-wide">
+            Login
+          </h2>
+
+          <div className="space-y-6">
+            <input
+              id="email"
+              placeholder="Enter Email"
+              className="w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-300 border border-white/20 focus:outline-none focus:border-blue-400 transition"
+            />
+            <input
+              id="pass"
+              type="password"
+              placeholder="Enter Password"
+              className="w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-300 border border-white/20 focus:outline-none focus:border-blue-400 transition"
+            />
+            <button
+              onClick={handleLogin}
+              disabled={loading}
+              className={`w-full py-3 rounded-xl text-lg font-semibold transition shadow-lg active:scale-95
+                ${loading
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 hover:shadow-blue-700/40"
+                }`}
+            >
+              {loading ? "Checking..." : "Login"}
+            </button>
+          </div>
+
+          {error && (
+            <p className="mt-6 text-center text-red-400 font-semibold">
+              {error}
+            </p>
+          )}
+        </div>
+      </div>
     </section>
   );
-};
-
-export default Login;
+}
