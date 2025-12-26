@@ -29,11 +29,7 @@ const ProjectsManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !formData.ProjectName ||
-      !formData.ProjectDetail ||
-      !formData.ProjectLink
-    ) {
+    if (!formData.ProjectName || !formData.ProjectDetail || !formData.ProjectLink) {
       showPopup("Please fill all fields", "error");
       return;
     }
@@ -41,9 +37,7 @@ const ProjectsManager = () => {
     try {
       const response = await fetch("http://localhost:5000/projects", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -68,100 +62,93 @@ const ProjectsManager = () => {
   };
 
   return (
-    <section className="mt-10">
-      <h2 className="text-[30px] font-bold mb-6 text-center">
+    <section className="mt-10 px-4 md:px-0 max-w-3xl mx-auto">
+      <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
         Add New Project
       </h2>
 
-      <div className="flex justify-center">
-        <form
-          onSubmit={handleSubmit}
-          className="w-full max-w-2xl p-4 space-y-4"
+      <form
+        onSubmit={handleSubmit}
+        className="w-full p-6 space-y-6 border border-gray-200 rounded-xl shadow-sm"
+      >
+        {/* Project Name */}
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
+          <label htmlFor="ProjectName" className="md:w-40 text-sm font-medium text-gray-700">
+            Project Name
+          </label>
+          <input
+            id="ProjectName"
+            type="text"
+            name="ProjectName"
+            placeholder="Enter project name"
+            value={formData.ProjectName}
+            onChange={handleChange}
+            className="border border-gray-300 h-10 w-full rounded-lg p-2
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Project Detail */}
+        <div className="flex flex-col md:flex-row md:items-start gap-3">
+          <label htmlFor="ProjectDetail" className="md:w-40 text-sm font-medium text-gray-700 md:pt-2">
+            Project Detail
+          </label>
+          <textarea
+            id="ProjectDetail"
+            name="ProjectDetail"
+            placeholder="Enter project details"
+            value={formData.ProjectDetail}
+            onChange={handleChange}
+            className="border border-gray-300 h-24 w-full rounded-lg p-2 resize-none
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Project Link */}
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
+          <label htmlFor="ProjectLink" className="md:w-40 text-sm font-medium text-gray-700">
+            Project Link
+          </label>
+          <input
+            id="ProjectLink"
+            type="text"
+            name="ProjectLink"
+            placeholder="https://example.com"
+            value={formData.ProjectLink}
+            onChange={handleChange}
+            className="border border-gray-300 h-10 w-full rounded-lg p-2
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="bg-blue-600 w-full text-white p-3 rounded-lg font-medium
+            hover:bg-blue-700 transition-colors cursor-pointer"
         >
-          {/* Project Name */}
-          <div className="flex flex-col md:flex-row md:items-center gap-3">
-            <label
-              htmlFor="ProjectName"
-              className="md:w-40 text-sm font-medium"
-            >
-              Project Name
-            </label>
-            <input
-              id="ProjectName"
-              type="text"
-              name="ProjectName"
-              placeholder="Enter project name"
-              value={formData.ProjectName}
-              onChange={handleChange}
-              className="border h-10 w-full rounded-[5px] p-2
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+          Add Project
+        </button>
+      </form>
 
-          {/* Project Detail */}
-          <div className="flex flex-col md:flex-row md:items-start gap-3">
-            <label
-              htmlFor="ProjectDetail"
-              className="md:w-40 text-sm font-medium md:pt-2"
-            >
-              Project Detail
-            </label>
-            <textarea
-              id="ProjectDetail"
-              name="ProjectDetail"
-              placeholder="Enter project details"
-              value={formData.ProjectDetail}
-              onChange={handleChange}
-              className="border h-24 w-full rounded-[5px] p-2 resize-none
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          {/* Project Link */}
-          <div className="flex flex-col md:flex-row md:items-center gap-3">
-            <label
-              htmlFor="ProjectLink"
-              className="md:w-40 text-sm font-medium"
-            >
-              Project Link
-            </label>
-            <input
-              id="ProjectLink"
-              type="text"
-              name="ProjectLink"
-              placeholder="https://example.com"
-              value={formData.ProjectLink}
-              onChange={handleChange}
-              className="border h-10 w-full rounded-[5px] p-2
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-blue-700 w-full text-white p-2 rounded
-              hover:bg-blue-600 transition-colors cursor-pointer"
-          >
-            Add Project
-          </button>
-        </form>
-      </div>
+      <Link href="/ProjectDetails">
+        <button
+          className="block m-auto mt-6 w-[160px] h-[50px] text-white font-semibold bg-blue-600
+            rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+        >
+          View Projects
+        </button>
+      </Link>
 
       {/* 🔔 Popup Toast */}
       {popup.show && (
         <div
           className={`fixed bottom-8 right-8 px-6 py-4 rounded-lg shadow-lg text-white
-          transition-all animate-fadeIn
-          ${popup.type === "success" ? "bg-green-500" : "bg-red-500"}`}
+            transition-all animate-fadeIn
+            ${popup.type === "success" ? "bg-green-500" : "bg-red-500"}`}
         >
           {popup.message}
         </div>
       )}
-      <Link href="/ProjectDetails">
-      <button className="block m-auto w-[150px] h-[50px] text-white font-semibold bg-blue-600
-      mb-5 rounded-[5px] mt-5 hover:bg-blue-700 cursor-pointer">
-        View Projects</button>
-        </Link>
     </section>
   );
 };
