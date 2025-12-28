@@ -1,11 +1,13 @@
+"use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
+import Navbar from "../components/Navbar";
 
-const ProjectsManager = () => {
+const ChartsData = () => {
   const [formData, setFormData] = useState({
-    ProjectName: "",
-    ProjectDetail: "",
-    ProjectLink: "",
+    LanguageName: "",
+    LanguageDetail: "",
   });
 
   const [popup, setPopup] = useState({
@@ -29,13 +31,13 @@ const ProjectsManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.ProjectName || !formData.ProjectDetail || !formData.ProjectLink) {
+    if (!formData.LanguageName || !formData.LanguageDetail) {
       showPopup("Please fill all fields", "error");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:5000/projects", {
+      const response = await fetch("http://localhost:5000/charts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -51,9 +53,8 @@ const ProjectsManager = () => {
       showPopup("Project added successfully!", "success");
 
       setFormData({
-        ProjectName: "",
-        ProjectDetail: "",
-        ProjectLink: "",
+        LanguageName: "",
+        LanguageDetail: "",
       });
     } catch (err) {
       console.error(err);
@@ -62,9 +63,11 @@ const ProjectsManager = () => {
   };
 
   return (
+    <>
+    <Navbar />
     <section className="mt-10 px-4 md:px-0 ">
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
-        Add New Project
+        Add New Data
       </h2>
 
       <form
@@ -74,14 +77,14 @@ const ProjectsManager = () => {
         {/* Project Name */}
         <div className="flex flex-col md:flex-row md:items-center gap-3">
           <label htmlFor="ProjectName" className="md:w-40 text-sm font-medium text-gray-700">
-            Project Name
+            Language Name
           </label>
           <input
-            id="ProjectName"
+            id="LanguageName"
             type="text"
-            name="ProjectName"
-            placeholder="Enter project name"
-            value={formData.ProjectName}
+            name="LanguageName"
+            placeholder="Enter language name"
+            value={formData.LanguageName}
             onChange={handleChange}
             className="border border-gray-300 h-10 w-full rounded-lg p-2
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -91,32 +94,15 @@ const ProjectsManager = () => {
         {/* Project Detail */}
         <div className="flex flex-col md:flex-row md:items-start gap-3">
           <label htmlFor="ProjectDetail" className="md:w-40 text-sm font-medium text-gray-700 md:pt-2">
-            Project Detail
+            Language Detail
           </label>
           <textarea
-            id="ProjectDetail"
-            name="ProjectDetail"
-            placeholder="Enter project details"
-            value={formData.ProjectDetail}
+            id="LanguageDetail"
+            name="LanguageDetail"
+            placeholder="Enter language details"
+            value={formData.LanguageDetail}
             onChange={handleChange}
             className="border border-gray-300 h-24 w-full rounded-lg p-2 resize-none
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        {/* Project Link */}
-        <div className="flex flex-col md:flex-row md:items-center gap-3">
-          <label htmlFor="ProjectLink" className="md:w-40 text-sm font-medium text-gray-700">
-            Project Link
-          </label>
-          <input
-            id="ProjectLink"
-            type="text"
-            name="ProjectLink"
-            placeholder="https://example.com"
-            value={formData.ProjectLink}
-            onChange={handleChange}
-            className="border border-gray-300 h-10 w-full rounded-lg p-2
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
@@ -130,12 +116,12 @@ const ProjectsManager = () => {
         </button>
       </form>
 
-      <Link href="/ProjectDetails">
+      <Link href="/MainApp">
         <button
           className="block m-auto mt-6 w-[160px] h-[50px] text-white font-semibold bg-blue-600
             rounded-lg hover:bg-blue-700 transition-colors cursor-pointer mb-10"
         >
-          View Projects
+          View Details
         </button>
       </Link>
 
@@ -150,7 +136,8 @@ const ProjectsManager = () => {
         </div>
       )}
     </section>
+    </>
   );
 };
 
-export default ProjectsManager;
+export default ChartsData;

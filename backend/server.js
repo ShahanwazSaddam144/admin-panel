@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const emailRouter = require("./controllers/mail");
 const Project = require("./controllers/projects");
 const Login = require("./controllers/login");
+const Charts = require("./controllers/charts");
 
 dotenv.config();
 
@@ -16,11 +17,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ===================
-// CORS (FIXED for cookies)
+// CORS 
 // ===================
 app.use(cors({
-  origin: "http://localhost:3000", // exact frontend URL
-  credentials: true,               // allow cookies
+  origin: "http://localhost:3000", 
+  credentials: true,               
 }));
 
 // ===================
@@ -54,6 +55,7 @@ app.use(limiter);
 app.use('/', emailRouter);
 app.use('/', Project);
 app.use('/', Login);
+app.use('/', Charts);
 
 // ===================
 // MongoDB Connection

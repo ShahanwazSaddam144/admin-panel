@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import EmailSender from "../components/EmailSender";
 import ProjectsManager from "../components/ProjectsManager";
 import Navbar from "../components/Navbar";
+import Charts from "../components/Charts";
 
 const Main = () => {
   const router = useRouter();
@@ -44,8 +45,9 @@ const Main = () => {
   return (
     <>
       <Navbar />
-      <EmailSender />
+      <Charts />
       <ProjectsManager />
+      <EmailSender />
     </>
   );
 };

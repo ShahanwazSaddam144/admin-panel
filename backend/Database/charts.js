@@ -1,0 +1,19 @@
+const mongoose = require("mongoose");
+
+const chartsSchema = new mongoose.Schema(
+  {
+    LanguageName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    LanguageDetail: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Charts", chartsSchema);
