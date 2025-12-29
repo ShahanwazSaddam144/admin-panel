@@ -43,4 +43,16 @@ router.get("/charts", async (req, res) => {
   }
 });
 
+router.delete('/charts/:id', async (req,res)=>{
+  try{
+    const deleteCharts = await Charts.findByIdAndDelete(req.params.id);
+    if(!deleteCharts){
+      return res.json({success: false, message: "Email not Found"});
+    }
+    res.json({ success: true, message: 'Email deleted successfully!' });
+  } catch(err){
+    res.json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;
