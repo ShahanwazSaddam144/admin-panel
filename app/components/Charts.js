@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import {
   BarChart,
@@ -12,6 +14,7 @@ import {
   Legend,
 } from "recharts";
 import Link from "next/link";
+import { Trash2 } from "lucide-react";
 
 const usageData = [
   { name: "C", usage: 60 },
@@ -77,10 +80,9 @@ const Charts = () => {
   ====================== */
   const confirmDelete = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:5000/charts/${selectedId}`,
-        { method: "DELETE" }
-      );
+      const res = await fetch(`http://localhost:5000/charts/${selectedId}`, {
+        method: "DELETE",
+      });
 
       const data = await res.json();
 
@@ -155,29 +157,36 @@ const Charts = () => {
         </div>
       )}
 
-      {/* ===== Language Notes ===== */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {languageNotes.map((lang, index) => (
+      {/* ===== Language Notes Section ===== */}
+      <header className="text-center mt-20 mb-6">
+        <h1 className="font-bold text-[35px] text-gray-800">
+          Language Details
+        </h1>
+      </header>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {languageNotes.map((lang) => (
           <div
-            key={index}
-            className="rounded-2xl bg-white/5 backdrop-blur-md p-5 shadow-lg relative"
+            key={lang._id}
+            className="rounded-2xl bg-white/5 backdrop-blur-md p-5 shadow-lg flex flex-col h-full"
           >
             <h4 className="text-lg font-semibold text-blue-700 mb-2">
               {lang.LanguageName}
             </h4>
-            <p className="text-sm text-gray-700 leading-relaxed mb-4">
+            <p className="text-sm text-gray-700 leading-relaxed mb-4 flex-grow">
               {lang.LanguageDetail}
             </p>
 
+            {/* Delete Button with Trash Icon */}
             <button
               onClick={() => {
                 setSelectedId(lang._id);
                 setShowPopup(true);
               }}
-              className="absolute top-4 right-4 px-3 py-1 text-sm
-              bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+              className="mt-auto flex items-center justify-center gap-2 px-3 py-2
+                bg-red-500 text-white rounded-md hover:bg-red-600 transition w-[200px]"
             >
-              Delete
+              <Trash2 size={16} /> Delete
             </button>
           </div>
         ))}
@@ -193,7 +202,7 @@ const Charts = () => {
         </button>
       </Link>
 
-      {/* ===== CUSTOM DELETE POPUP ===== */}
+      {/* ===== DELETE POPUP ===== */}
       {showPopup && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 w-[90%] max-w-sm shadow-xl">
@@ -201,26 +210,22 @@ const Charts = () => {
               Confirm Delete
             </h3>
             <p className="text-sm text-gray-600 mb-6">
-              Are you sure you want to delete this language? This action
-              cannot be undone.
+              Are you sure you want to delete this language? This action cannot
+              be undone.
             </p>
-
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => {
                   setShowPopup(false);
                   setSelectedId(null);
                 }}
-                className="px-4 py-2 rounded-md bg-gray-200
-                text-gray-700 hover:bg-gray-300 transition"
+                className="px-4 py-2 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
               >
                 Cancel
               </button>
-
               <button
                 onClick={confirmDelete}
-                className="px-4 py-2 rounded-md bg-red-500
-                text-white hover:bg-red-600 transition"
+                className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 transition"
               >
                 Delete
               </button>

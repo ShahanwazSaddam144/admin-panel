@@ -46,8 +46,6 @@ const Main = () => {
     <>
       <Navbar />
       <Charts />
-      <ProjectsManager />
-      <EmailSender />
     </>
   );
 };

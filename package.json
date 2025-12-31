@@ -22,7 +22,9 @@
     "nodemailer": "^7.0.11",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "recharts": "^3.6.0"
+    "react-swiper": "^0.1.5",
+    "recharts": "^3.6.0",
+    "swiper": "^12.0.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

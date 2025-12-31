@@ -57,11 +57,9 @@ const RecieptName = () => {
 
   return (
     <>
-      <Navbar />
-
+    <Navbar />
       <section className="p-6">
         <h2 className="text-2xl font-semibold mb-4">Email Sending History</h2>
-
         {loading ? (
           <p className="text-gray-600">Loading...</p>
         ) : emails.length === 0 ? (

@@ -9,9 +9,13 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ✅ ADDED: success toast state
+  const [success, setSuccess] = useState("");
+
   const handleLogin = async () => {
     setLoading(true);
     setError("");
+    setSuccess(""); // ✅ ADDED
 
     const email = document.getElementById("email").value;
     const pass = document.getElementById("pass").value;
@@ -27,7 +31,11 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        router.replace("/MainApp");
+        // ✅ ADDED: show success toast
+        setSuccess("Login successful! Redirecting...");
+        setTimeout(() => {
+          router.replace("/Home");
+        }, 1200);
       } else {
         setError(data.message || "Login failed");
       }
@@ -40,10 +48,9 @@ export default function LoginPage() {
 
   return (
     <section className="min-h-screen flex flex-col md:flex-row">
-      
+
       {/* Left Side - Logo & Info */}
       <div className="md:w-1/2 bg-blue-600 flex flex-col items-center justify-center text-white p-10 relative overflow-hidden">
-        {/* Decorative shapes */}
         <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-500 rounded-full opacity-40 animate-pulse"></div>
         <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-blue-400 rounded-full opacity-30 animate-pulse"></div>
 
@@ -76,13 +83,13 @@ export default function LoginPage() {
             <input
               id="email"
               placeholder="Enter Email"
-              className="w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-300 border border-white/20 focus:outline-none focus:border-blue-400 transition"
+              className="text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition"
             />
             <input
               id="pass"
               type="password"
               placeholder="Enter Password"
-              className="w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-300 border border-white/20 focus:outline-none focus:border-blue-400 transition"
+              className=" text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition"
             />
             <button
               onClick={handleLogin}
@@ -104,6 +111,16 @@ export default function LoginPage() {
           )}
         </div>
       </div>
+
+      {/* ✅ ADDED: Success Toast (Bottom Right) */}
+      {success && (
+        <div className="fixed bottom-6 right-6 z-50 animate-slideUp">
+          <div className="flex items-center gap-4 bg-green-600 text-white px-6 py-4 rounded-2xl shadow-2xl border border-green-400">
+            <span className="text-lg font-semibold">✅</span>
+            <p className="font-medium">{success}</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

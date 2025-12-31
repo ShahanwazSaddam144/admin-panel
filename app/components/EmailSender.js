@@ -43,7 +43,7 @@ const EmailSender = () => {
       <div className="w-full mt-8 p-8 relative">
         <header className="flex flex-row items-center justify-center gap-3 mb-6">
           <MailCheck size={35} className="text-blue-600" />
-          <h2 className="text-[30px] font-extrabold">Email Sending Panel</h2>
+          <h2 className="text-[30px] font-bold text-gray-800">Email Sending Panel</h2>
         </header>
 
         <div className="flex gap-4 mb-4">

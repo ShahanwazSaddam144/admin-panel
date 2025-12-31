@@ -27,12 +27,12 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="backdrop-blur-md bg-white fixed top-0 left-0 w-full z-50">
+      <nav className="backdrop-blur-md bg-white border-b border-b-gray-400 fixed top-0 left-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
 
           {/* Logo */}
           <Link
-          href="/MainApp"
+          href="/Home"
           >
           <h1 className="text-gray-900 font-extrabold text-2xl tracking-wide">
             Butt Networks
@@ -58,17 +58,25 @@ const Navbar = () => {
                   className="block px-4 py-2 text-white hover:bg-blue-600 transition"
                   onClick={() => setMenu(false)}
                 >
-                  Website Page
+                  Our Website
                 </Link>
 
                 <Link
-                  href="https://dev.projects.buttnetworks.com/"
-                  target="_blank"
+                  href="/EmailPanel"
                   className="block px-4 py-2 text-white hover:bg-blue-600 transition"
                   onClick={() => setMenu(false)}
                 >
-                  Dev Panel
+                  Email Panel
                 </Link>
+
+                  <Link
+                  href="/ProjectPanel"
+                  className="block px-4 py-2 text-white hover:bg-blue-600 transition"
+                  onClick={() => setMenu(false)}
+                >
+                  Project Panel
+                </Link>
+
 
                 {/* Divider */}
                 <div className="border-t border-slate-700"></div>
