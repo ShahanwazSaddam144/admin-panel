@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 
-const Home = () => {
+const Home_ = () => {
   const features = [
     {
       icon: "📧",
@@ -28,7 +28,26 @@ const Home = () => {
 
   return (
     <>
-    <Navbar />
+
+    {/* Navbar */}
+    <nav className="backdrop-blur-md bg-white border-b border-b-gray-400 fixed top-0 left-0 w-full z-50">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        {/* Logo */}
+          <Link href="/Home">
+            <h1 className="text-gray-900 font-extrabold text-2xl tracking-wide">
+              Butt Networks
+            </h1>
+          </Link>
+
+          {/* Right side: User initial + Dropdown */}
+          <div className="relative flex items-center gap-4">
+            <Link href="/Login">
+            <button className="px-8 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-lg hover:bg-blue-700 transition active:scale-95">
+              Login</button>
+            </Link>
+          </div>
+      </div>
+    </nav>
     
       {/* Hero Section */}
       <section className="bg-transparent">
@@ -50,7 +69,7 @@ const Home = () => {
           {/* CTA Buttons */}
           <div className="mt-10 flex gap-4 flex-wrap justify-center">
 
-            <Link href="/MainApp">
+            <Link href="/Login">
             <button className="px-8 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-lg hover:bg-blue-700 transition active:scale-95">
               Open Dashboard
             </button>
@@ -108,4 +127,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Home_;

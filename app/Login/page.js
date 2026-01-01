@@ -45,7 +45,7 @@ export default function AuthPage() {
             : "Login successful! Redirecting..."
         );
         setTimeout(() => {
-          router.replace("/Home");
+          router.replace("/MainApp");
         }, 1200);
       } else {
         setError(data.message || (isSignup ? "Signup failed" : "Login failed"));
