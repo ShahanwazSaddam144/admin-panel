@@ -6,7 +6,7 @@ const Projects = require("../Database/projects");
    CREATE PROJECT
 ====================== */
 router.post('/projects',  async (req, res) => {
-    const { ProjectName, ProjectDetail, ProjectLink, StartDate, EndDate } = req.body;
+    const { ProjectName, ProjectDetail, ProjectLink, StartDate, EndDate, DaysConsumed } = req.body;
 
     if (!ProjectName || !ProjectDetail || !ProjectLink || !StartDate || !EndDate ) {
         return res.status(400).json({ 
@@ -16,17 +16,13 @@ router.post('/projects',  async (req, res) => {
     }
 
     try {
-        // Automatically calculate DaysConsumed
-        const start = new Date(StartDate);
-        const end = new Date(EndDate);
-        const DaysConsumed = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
 
         const newProject = new Projects({
             ProjectName,
             ProjectDetail,
             ProjectLink,
-            StartDate: start,
-            EndDate: end,
+            StartDate,
+            EndDate,
             DaysConsumed,
         });
 
