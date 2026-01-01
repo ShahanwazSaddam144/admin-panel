@@ -6,26 +6,24 @@ import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [menu, setMenu] = useState(false);
-  const [user, setUser] = useState(null); // Store user info
+  const [user, setUser] = useState(null);
+
   const router = useRouter();
 
-  const handleMenu = () => {
-    setMenu((prev) => !prev);
-  };
-
+  /* ======================
+     LOGOUT
+  ====================== */
   const handleLogout = async () => {
-    try {
-      await fetch("http://localhost:5000/logout", {
-        method: "POST",
-        credentials: "include", // 🔑 important
-      });
-      router.replace("/"); // back to login
-    } catch (err) {
-      console.error("Logout failed");
-    }
+    await fetch("http://localhost:5000/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    router.replace("/");
   };
 
-  // Fetch user info on mount
+  /* ======================
+     FETCH USER
+  ====================== */
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -33,94 +31,81 @@ const Navbar = () => {
           credentials: "include",
         });
         const data = await res.json();
-        setUser(data); 
-      } catch (err) {
+        setUser(data);
+      } catch {
         console.error("Failed to fetch user");
       }
     };
     fetchUser();
   }, []);
-  console.log(user)
 
   return (
     <>
-      <nav className="backdrop-blur-md bg-white border-b border-b-gray-400 fixed top-0 left-0 w-full z-50">
+      <nav className="backdrop-blur-md bg-white border-b fixed top-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-
           {/* Logo */}
           <Link href="/AdminPanel">
-            <h1 className="text-gray-900 font-extrabold text-2xl tracking-wide">
+            <h1 className="text-gray-900 font-extrabold text-2xl cursor-pointer">
               Butt Networks
             </h1>
           </Link>
 
-          {/* Right side: User initial + Dropdown */}
-          <div className="relative flex items-center gap-4">
-            
-            {/* User Initial */}
+          {/* Right Side */}
+          <div className="flex items-center gap-4 relative">
+            {/* User Initial → Profile Page */}
             {user && (
-              <div className="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+              <div
+                onClick={() => router.push("/userProfile")}
+                className="w-10 h-10 bg-blue-500 text-white rounded-full
+                flex items-center justify-center font-bold text-lg
+                cursor-pointer hover:bg-blue-600 transition"
+                title="Profile"
+              >
                 {user.name.charAt(0).toUpperCase()}
               </div>
             )}
 
-            {/* Dropdown */}
+            {/* Menu Button */}
             <button
-              onClick={handleMenu}
-              className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg 
-                         hover:bg-blue-600 transition-all duration-300"
+              onClick={() => setMenu(!menu)}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
             >
               Menu
             </button>
 
+            {/* Menu Dropdown */}
             {menu && (
-              <div className="absolute right-0 mt-55 bg-slate-800 border border-slate-700 rounded-lg shadow-lg overflow-hidden w-48">
-
+              <div className="absolute right-0 top-14 bg-slate-800 rounded-lg w-48 overflow-hidden z-40">
                 <Link
                   href="https://buttnetworks.com/"
                   target="_blank"
-                  className="block px-4 py-2 text-white hover:bg-blue-600 transition"
-                  onClick={() => setMenu(false)}
+                  className="block px-4 py-2 text-white hover:bg-blue-600"
                 >
                   Our Website
                 </Link>
 
                 <Link
-                  href="/EmailPanel"
-                  className="block px-4 py-2 text-white hover:bg-blue-600 transition"
-                  onClick={() => setMenu(false)}
-                >
-                  Email Panel
-                </Link>
-
-                <Link
                   href="/ProjectPanel"
-                  className="block px-4 py-2 text-white hover:bg-blue-600 transition"
-                  onClick={() => setMenu(false)}
+                  className="block px-4 py-2 text-white hover:bg-blue-600"
                 >
                   Project Panel
                 </Link>
 
-                  <Link
+                <Link
                   href="/LanguagePanel"
-                  className="block px-4 py-2 text-white hover:bg-blue-600 transition"
-                  onClick={() => setMenu(false)}
+                  className="block px-4 py-2 text-white hover:bg-blue-600"
                 >
                   Language Panel
                 </Link>
 
+                <div className="border-t border-slate-700" />
 
-                {/* Divider */}
-                <div className="border-t border-slate-700"></div>
-
-                {/* Logout */}
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-red-400 hover:bg-red-600 hover:text-white transition"
+                  className="w-full text-left px-4 py-2 text-red-400 hover:bg-red-600 hover:text-white"
                 >
                   Logout
                 </button>
-
               </div>
             )}
           </div>
@@ -128,7 +113,7 @@ const Navbar = () => {
       </nav>
 
       {/* Spacer */}
-      <div className="h-16"></div>
+      <div className="h-16" />
     </>
   );
 };

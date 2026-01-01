@@ -116,6 +116,7 @@ const ProjectsManager = () => {
           <input
             type="text"
             name="ProjectName"
+            placeholder="Enter your Project Name"
             value={formData.ProjectName}
             onChange={handleChange}
             className="border border-gray-300 h-10 w-full rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
@@ -129,6 +130,7 @@ const ProjectsManager = () => {
           </label>
           <textarea
             name="ProjectDetail"
+            placeholder="Enter your Project Details"
             value={formData.ProjectDetail}
             onChange={handleChange}
             className="border border-gray-300 h-24 w-full rounded-lg p-2 resize-none focus:ring-2 focus:ring-blue-500"
@@ -142,6 +144,7 @@ const ProjectsManager = () => {
           </label>
           <input
             type="text"
+            placeholder="Enter your Project Link"
             name="ProjectLink"
             value={formData.ProjectLink}
             onChange={handleChange}
@@ -186,6 +189,7 @@ const ProjectsManager = () => {
           <input
             type="number"
             name="DaysConsumed"
+            placeholder="Days Consumed"
             value={formData.DaysConsumed}
             readOnly
             className="border border-gray-300 h-10 w-full rounded-lg p-2 bg-gray-100 cursor-not-allowed"

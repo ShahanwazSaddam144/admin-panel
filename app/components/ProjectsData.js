@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 const ProjectsData = () => {
   const [projects, setProjects] = useState([]);
@@ -88,6 +89,18 @@ const ProjectsData = () => {
           </div>
         ))}
       </div>
+
+      {!loading && projects.length === 0 && (
+        <Link href="/ProjectPanel">
+          <button
+            className="bg-blue-600 hover:bg-blue-700 px-8 py-2 block m-auto mt-5
+      text-white font-semibold rounded-[4px] cursor-pointer active:bg-blue-700 transition
+      duration-200"
+          >
+            Create your First Project
+          </button>
+        </Link>
+      )}
     </section>
   );
 };

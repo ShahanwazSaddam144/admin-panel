@@ -3,24 +3,52 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Eye, EyeOff } from "lucide-react"; // Eye icons
+import { Eye, EyeOff } from "lucide-react";
 
 export default function AuthPage() {
   const router = useRouter();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
-  const [isSignup, setIsSignup] = useState(false); // toggle login/signup
-  const [showPass, setShowPass] = useState(false); // toggle password visibility
 
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [isSignup, setIsSignup] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  /* ======================
+     PASSWORD VALIDATION
+  ====================== */
+  const validatePassword = (value) => {
+    setPassword(value);
+
+    if (!isSignup) {
+      setPasswordError("");
+      return;
+    }
+
+    if (value.length < 8) {
+      setPasswordError("Password must be at least 8 characters");
+    } else {
+      setPasswordError("");
+    }
+  };
+
+  /* ======================
+     AUTH HANDLER
+  ====================== */
   const handleAuth = async () => {
+    if (isSignup && passwordError) return;
+
     setLoading(true);
     setError("");
     setSuccess("");
 
     const name = document.getElementById("name")?.value;
     const email = document.getElementById("email").value;
-    const pass = document.getElementById("pass").value;
+    const pass = password;
 
     try {
       const endpoint = isSignup
@@ -44,11 +72,9 @@ export default function AuthPage() {
             ? "Signup successful! Redirecting..."
             : "Login successful! Redirecting..."
         );
-        setTimeout(() => {
-          router.replace("/AdminPanel");
-        }, 1200);
+        setTimeout(() => router.replace("/AdminPanel"), 1200);
       } else {
-        setError(data.message || (isSignup ? "Signup failed" : "Login failed"));
+        setError(data.message || "Authentication failed");
       }
     } catch {
       setError("Server not reachable");
@@ -57,97 +83,111 @@ export default function AuthPage() {
     }
   };
 
+  /* ======================
+     PASSWORD STRENGTH
+  ====================== */
+  const passwordStrength = () => {
+    if (password.length < 8) return "Weak";
+    if (password.match(/[A-Z]/) && password.match(/[0-9]/))
+      return "Strong";
+    return "Good";
+  };
+
   return (
     <section className="min-h-screen flex flex-col md:flex-row">
-
-      {/* Left Side */}
-      <div className="md:w-1/2 bg-blue-600 flex flex-col items-center justify-center text-white p-10 relative overflow-hidden">
-        <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-500 rounded-full opacity-40 animate-pulse"></div>
-        <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-blue-400 rounded-full opacity-30 animate-pulse"></div>
-
-        <div className="relative z-10 text-center md:text-left max-w-sm">
+      {/* LEFT */}
+      <div className="md:w-1/2 bg-blue-600 flex items-center justify-center p-10 text-white">
+        <div>
           <Image
             src="/butt.png"
             alt="Butt Networks"
             width={150}
             height={150}
-            className="mx-auto md:mx-0 rounded-full drop-shadow-2xl mb-6"
+            className="mx-auto rounded-full mb-6"
           />
-
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-3">
             Welcome to <span className="text-yellow-300">Butt Networks</span>
           </h1>
-          <p className="text-lg text-white/90">
-            Securely manage your projects and workflows.{" "}
+          <p>
             {isSignup
-              ? "Sign up to create your account."
-              : "Log in to access your dashboard and all features."}
+              ? "Create your account to get started."
+              : "Login to access your admin dashboard."}
           </p>
         </div>
       </div>
 
-      {/* Right Side */}
+      {/* RIGHT */}
       <div className="md:w-1/2 flex items-center justify-center p-10">
-        <div className="w-full max-w-md bg-white/10 backdrop-blur-md p-10 rounded-3xl shadow-2xl border border-white/20 text-white animate-slideUp">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8 tracking-wide">
+        <div className="w-full max-w-md bg-white/10 backdrop-blur-md p-10 rounded-3xl shadow-xl">
+          <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
             {isSignup ? "Sign Up" : "Login"}
           </h2>
 
-          <div className="space-y-6">
-            {isSignup && (
-              <input
-                id="name"
-                placeholder="Enter Name"
-                className="text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition"
-              />
-            )}
-
+          {isSignup && (
             <input
-              id="email"
-              placeholder="Enter Email"
-              className="text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition"
+              id="name"
+              placeholder="Enter Name"
+              className="mb-4 w-full px-4 py-3 rounded-xl text-black"
+            />
+          )}
+
+          <input
+            id="email"
+            placeholder="Enter Email"
+            className="mb-4 w-full px-4 py-3 rounded-xl text-black"
+          />
+
+          {/* PASSWORD */}
+          <div className="relative mb-2">
+            <input
+              id="pass"
+              type={showPass ? "text" : "password"}
+              placeholder="Enter Password"
+              value={password}
+              onChange={(e) => validatePassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl text-black pr-12"
             />
 
-            {/* Password with show/hide */}
-            <div className="relative">
-              <input
-                id="pass"
-                type={showPass ? "text" : "password"}
-                placeholder="Enter Password"
-                className="text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition pr-12"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPass(!showPass)}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-700"
-              >
-                {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-
             <button
-              onClick={handleAuth}
-              disabled={loading}
-              className={`w-full py-3 rounded-xl text-lg font-semibold transition shadow-lg active:scale-95
-                ${loading
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 hover:shadow-blue-700/40"
-                }`}
+              type="button"
+              onClick={() => setShowPass(!showPass)}
+              className="absolute top-1/2 right-3 -translate-y-1/2"
             >
-              {loading
-                ? isSignup
-                  ? "Signing up..."
-                  : "Checking..."
-                : isSignup
-                ? "Sign Up"
-                : "Login"}
+              {showPass ? <EyeOff /> : <Eye />}
             </button>
           </div>
 
-          {/* Toggle Login/Signup */}
+          {/* PASSWORD FEEDBACK */}
+          {isSignup && (
+            <p
+              className={`text-sm mb-3 ${
+                passwordStrength() === "Strong"
+                  ? "text-green-500"
+                  : passwordStrength() === "Good"
+                  ? "text-yellow-500"
+                  : "text-red-500"
+              }`}
+            >
+              Password strength: {passwordStrength()}
+              {passwordError && ` • ${passwordError}`}
+            </p>
+          )}
+
+          <button
+            onClick={handleAuth}
+            disabled={loading || (isSignup && passwordError)}
+            className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
+          >
+            {loading
+              ? "Processing..."
+              : isSignup
+              ? "Sign Up"
+              : "Login"}
+          </button>
+
           <p
             onClick={() => setIsSignup(!isSignup)}
-            className="mt-6 text-center cursor-pointer text-blue-600 transition"
+            className="mt-6 text-center cursor-pointer text-blue-600"
           >
             {isSignup
               ? "Already have an account? Login"
@@ -155,18 +195,15 @@ export default function AuthPage() {
           </p>
 
           {error && (
-            <p className="mt-6 text-center text-red-400 font-semibold">{error}</p>
+            <p className="text-center mt-4 text-red-500">{error}</p>
           )}
         </div>
       </div>
 
-      {/* Success Toast */}
+      {/* SUCCESS TOAST */}
       {success && (
-        <div className="fixed bottom-6 right-6 z-50 animate-slideUp">
-          <div className="flex items-center gap-4 bg-green-600 text-white px-6 py-4 rounded-2xl shadow-2xl border border-green-400">
-            <span className="text-lg font-semibold">✅</span>
-            <p className="font-medium">{success}</p>
-          </div>
+        <div className="fixed bottom-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-lg">
+          {success}
         </div>
       )}
     </section>

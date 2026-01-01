@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import ProjectsData from "../components/ProjectsData";
-import LanguageDetails from "../components/LanguageDetails";
+import WelcomePanel from "../components/WelcomePanel";
 
 const Main = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const Main = () => {
 
         if (!res.ok) {
           console.log(res)
-          // router.replace("/");
+           router.replace("/");
         } else {
           setLoading(false); // Authenticated → show page
         }
@@ -45,7 +45,7 @@ const Main = () => {
   return (
     <>
    <Navbar />
-    <LanguageDetails />
+    <WelcomePanel />
     <ProjectsData />
      </>
   );

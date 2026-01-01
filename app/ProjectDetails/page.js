@@ -75,7 +75,7 @@ const ProjectDetails = () => {
       <Navbar />
 
       <section className="mt-10 px-6">
-        <h1 className="text-4xl font-bold mb-10 text-center text-gradient bg-clip-text">
+        <h1 className="text-4xl font-bold mb-10 text-center text-gray-900 bg-clip-text">
           Project Details
         </h1>
 

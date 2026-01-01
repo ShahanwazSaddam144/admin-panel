@@ -102,6 +102,34 @@ router.get("/me", protect, async (req, res) => {
 });
 
 /* ======================
+   DELETE ACCOUNT
+====================== */
+router.delete("/delete-account", protect, async (req, res) => {
+  try {
+    // req.user is coming from JWT (set by protect middleware)
+    const deletedUser = await User.findOneAndDelete({
+      email: req.user.email,
+    });
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+
+    res.json({ message: "Account deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete account" });
+  }
+});
+
+
+/* ======================
    EXPORT
 ====================== */
 module.exports = router;

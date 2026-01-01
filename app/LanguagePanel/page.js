@@ -117,7 +117,7 @@ const ChartsData = () => {
         </button>
       </form>
 
-      <Link href="/AdminPanel">
+      <Link href="/LanguageData">
         <button
           className="block m-auto mt-6 w-[160px] h-[50px] text-white font-semibold bg-blue-600
             rounded-lg hover:bg-blue-700 transition-colors cursor-pointer mb-10"

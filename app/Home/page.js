@@ -6,8 +6,8 @@ const Home_ = () => {
   const features = [
     {
       icon: "📧",
-      title: "Email Sending",
-      desc: "Send automated emails, system notifications, and important updates directly from the developer admin panel."
+      title: "Live Messaging",
+      desc: "Real-time chat between clients and developers, keeping communication fluid and centralized."
     },
     {
       icon: "🧠",
@@ -71,7 +71,7 @@ const Home_ = () => {
 
             <Link href="/Login">
             <button className="px-8 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-lg hover:bg-blue-700 transition active:scale-95">
-              Open Dashboard
+              Get Started
             </button>
             </Link>
 
