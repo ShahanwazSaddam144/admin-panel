@@ -47,7 +47,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
 
           {/* Logo */}
-          <Link href="/Home">
+          <Link href="/AdminPanel">
             <h1 className="text-gray-900 font-extrabold text-2xl tracking-wide">
               Butt Networks
             </h1>
