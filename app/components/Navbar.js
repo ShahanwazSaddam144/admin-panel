@@ -40,7 +40,6 @@ const Navbar = () => {
     };
     fetchUser();
   }, []);
-  console.log(user)
 
   return (
     <>
