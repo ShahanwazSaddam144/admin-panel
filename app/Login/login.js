@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react"; // Eye icons
 
 export default function AuthPage() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [isSignup, setIsSignup] = useState(false); // toggle login/signup
+  const [showPass, setShowPass] = useState(false); // toggle password visibility
 
   const handleAuth = async () => {
     setLoading(true);
@@ -37,7 +39,11 @@ export default function AuthPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setSuccess(isSignup ? "Signup successful! Redirecting..." : "Login successful! Redirecting...");
+        setSuccess(
+          isSignup
+            ? "Signup successful! Redirecting..."
+            : "Login successful! Redirecting..."
+        );
         setTimeout(() => {
           router.replace("/Home");
         }, 1200);
@@ -72,7 +78,10 @@ export default function AuthPage() {
             Welcome to <span className="text-yellow-300">Butt Networks</span>
           </h1>
           <p className="text-lg text-white/90">
-            Securely manage your projects and workflows. {isSignup ? "Sign up to create your account." : "Log in to access your dashboard and all features."}
+            Securely manage your projects and workflows.{" "}
+            {isSignup
+              ? "Sign up to create your account."
+              : "Log in to access your dashboard and all features."}
           </p>
         </div>
       </div>
@@ -92,17 +101,30 @@ export default function AuthPage() {
                 className="text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition"
               />
             )}
+
             <input
               id="email"
               placeholder="Enter Email"
               className="text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition"
             />
-            <input
-              id="pass"
-              type="password"
-              placeholder="Enter Password"
-              className=" text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition"
-            />
+
+            {/* Password with show/hide */}
+            <div className="relative">
+              <input
+                id="pass"
+                type={showPass ? "text" : "password"}
+                placeholder="Enter Password"
+                className="text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition pr-12"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-700"
+              >
+                {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+
             <button
               onClick={handleAuth}
               disabled={loading}
@@ -112,7 +134,13 @@ export default function AuthPage() {
                   : "bg-blue-600 hover:bg-blue-700 hover:shadow-blue-700/40"
                 }`}
             >
-              {loading ? (isSignup ? "Signing up..." : "Checking...") : (isSignup ? "Sign Up" : "Login")}
+              {loading
+                ? isSignup
+                  ? "Signing up..."
+                  : "Checking..."
+                : isSignup
+                ? "Sign Up"
+                : "Login"}
             </button>
           </div>
 
@@ -121,7 +149,9 @@ export default function AuthPage() {
             onClick={() => setIsSignup(!isSignup)}
             className="mt-6 text-center cursor-pointer text-blue-600 transition"
           >
-            {isSignup ? "Already have an account? Login" : "Don't have an account? Sign Up"}
+            {isSignup
+              ? "Already have an account? Login"
+              : "Don't have an account? Sign Up"}
           </p>
 
           {error && (

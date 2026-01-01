@@ -2,42 +2,15 @@ const mongoose = require("mongoose");
 
 const projectSchema = new mongoose.Schema(
   {
-    ProjectName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    ProjectDetail: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    ProjectLink: {
-      type: String,
-      required: true,
-    },
-
-    StartDate: {
-      type: Date,
-      required: true,
-    },
-
-    EndDate: {
-      type: Date,
-      required: true,
-    },
-
-    DaysConsumed: {
-      type: Number,
-      required: true,
-    },
+    ProjectName: String,
+    ProjectDetail: String,
+    ProjectLink: String,
+    StartDate: Date,
+    EndDate: Date,
+    DaysConsumed: Number,
+    userEmail: String, // ← added
   },
-
-  {
-    timestamps: true, // adds createdAt & updatedAt
-  }
+  { timestamps: true }
 );
 
-module.exports = mongoose.model("Project", projectSchema);
+module.exports = mongoose.model("Projects", projectSchema);

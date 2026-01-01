@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../Database/users");
 
 const router = express.Router();
+
 const JWT_SECRET = "super_secret_key_123";
 
 /* ======================
@@ -76,10 +77,28 @@ router.post("/logout", (req, res) => {
 ====================== */
 router.get("/main-app", protect, (req, res) => {
   res.json({
-    message: "Welcome to MainApp",
+    heading: "Welcome to",
+    message: "Secure Admin-Panel",
     user: req.user.name,
   });
 });
+
+
+/* ======================
+   CURRENT USER (/me)
+====================== */
+router.get("/me", protect, async (req, res) => {
+  try {
+    // req.user is set by protect middleware (decoded JWT)
+    const user = await User.findOne({ email: req.user.email }).select("-pass"); // exclude password
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({ name: user.name, email: user.email });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch user" });
+  }
+});
+
 
 /* ======================
    EXPORT

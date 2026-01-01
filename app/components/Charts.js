@@ -44,7 +44,8 @@ const Charts = () => {
         const res = await fetch("http://localhost:5000/main-app", {
           credentials: "include", // if using cookies
           headers: {
-            "Content-Type": "application/json",          },
+            "Content-Type": "application/json",
+          },
         });
 
         const data = await res.json();
@@ -88,13 +89,15 @@ const Charts = () => {
 
   return (
     <div className="w-full p-6 space-y-10 bg-transparent relative">
-
       {/* ===== PROTECTED DATA ===== */}
       <div className="flex flex-cols justify-center items-center mt-20">
         {protectedData ? (
-          <div>
-            <p className="text-gray-900 mb-2 text-[50px] font-extrabold">{protectedData.message}</p>
-            <p className="text-gray-500 font-semibold">
+          <div className="text-center">
+            <h1 className="flex gap-5 text-gray-800 mb-2 text-[50px] font-extrabold">
+              {protectedData.heading}
+              <span className="text-blue-600">{protectedData.message}</span>
+            </h1>
+            <p className="text-green-500 font-semibold text-2xl">
               {protectedData.user}
             </p>
           </div>
@@ -108,6 +111,8 @@ const Charts = () => {
           {fetchError}
         </div>
       )}
+
+
 
       {/* ===== Language Notes Section ===== */}
       <header className="text-center mt-20 mb-6">
