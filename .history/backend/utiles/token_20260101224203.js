@@ -1,0 +1,3 @@
+const jwt aabc6a9cfcfc05011de1978688bea7e28a045a9fa2fce2c15038c24a1a26e67f
+
+const JWT_SECRET = process.env.JWT_SECRET
