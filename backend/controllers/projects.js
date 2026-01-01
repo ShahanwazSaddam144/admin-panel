@@ -2,21 +2,34 @@ const express = require("express");
 const router = express.Router(); 
 const Projects = require("../Database/projects");
 
-router.post('/projects', async (req, res) => {
-    const { ProjectName, ProjectDetail, ProjectLink } = req.body;
+/* ======================
+   CREATE PROJECT
+====================== */
+router.post('/projects',  async (req, res) => {
+    const { ProjectName, ProjectDetail, ProjectLink, StartDate, EndDate } = req.body;
 
-    if (!ProjectName || !ProjectDetail || !ProjectLink) {
+    if (!ProjectName || !ProjectDetail || !ProjectLink || !StartDate || !EndDate ) {
         return res.status(400).json({ 
             success: false, 
-            message: "Please fill all fields" 
+            message: "Please fill all required fields" 
         });
     }
 
     try {
+        // Automatically calculate DaysConsumed
+        const start = new Date(StartDate);
+        const end = new Date(EndDate);
+        const DaysConsumed = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
         const newProject = new Projects({
             ProjectName,
             ProjectDetail,
-            ProjectLink
+            ProjectLink,
+            StartDate: start,
+            EndDate: end,
+            DaysConsumed,
+            userEmail: req.user.email, // from JWT
+            userName: req.user.name,   // from JWT
         });
 
         const savedProject = await newProject.save();
@@ -35,24 +48,40 @@ router.post('/projects', async (req, res) => {
     }
 });
 
-router.get('/projects', async(req,res)=>{
-    try{
-        const projects = await Projects.find().sort({createdAt: -1});
-        res.json({ success: true, projects});
-    } catch(err){
-        res.json({ success: false, message: err.message });
-    }
+/* ======================
+   GET USER PROJECTS
+====================== */
+router.get("/projects", async (req, res) => {
+  try {
+    // Fetch projects linked to the logged-in user
+    const projects = await Projects.find({
+        userEmail: req.user.email
+    }).sort({ createdAt: -1 });
+
+    res.json({ success: true, projects });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
+/* ======================
+   DELETE PROJECT
+====================== */
 router.delete('/projects/:id', async (req,res)=>{
-    try{
-        const deleteProject = await Projects.findByIdAndDelete(req.params.id);
-        if(!deleteProject){
-            return res.json({ success: false, message: 'Email not found' });
+    try {
+        // Only allow deletion of projects owned by this user
+        const project = await Projects.findOneAndDelete({
+            _id: req.params.id,
+            userEmail: req.user.email
+        });
+
+        if (!project) {
+            return res.status(404).json({ success: false, message: 'Project not found or not yours' });
         }
-        res.json({ success: true, message: 'Email deleted successfully!' });
+
+        res.json({ success: true, message: 'Project deleted successfully!' });
     } catch(err){
-        res.json({ success: false, message: err.message });
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 

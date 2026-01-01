@@ -4,40 +4,45 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-export default function LoginPage() {
+export default function AuthPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  // ✅ ADDED: success toast state
   const [success, setSuccess] = useState("");
+  const [isSignup, setIsSignup] = useState(false); // toggle login/signup
 
-  const handleLogin = async () => {
+  const handleAuth = async () => {
     setLoading(true);
     setError("");
-    setSuccess(""); // ✅ ADDED
+    setSuccess("");
 
+    const name = document.getElementById("name")?.value;
     const email = document.getElementById("email").value;
     const pass = document.getElementById("pass").value;
 
     try {
-      const res = await fetch("http://localhost:5000/login", {
+      const endpoint = isSignup
+        ? "http://localhost:5000/signup"
+        : "http://localhost:5000/login";
+
+      const bodyData = isSignup ? { name, email, pass } : { email, pass };
+
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email, pass }),
+        body: JSON.stringify(bodyData),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        // ✅ ADDED: show success toast
-        setSuccess("Login successful! Redirecting...");
+        setSuccess(isSignup ? "Signup successful! Redirecting..." : "Login successful! Redirecting...");
         setTimeout(() => {
           router.replace("/Home");
         }, 1200);
       } else {
-        setError(data.message || "Login failed");
+        setError(data.message || (isSignup ? "Signup failed" : "Login failed"));
       }
     } catch {
       setError("Server not reachable");
@@ -49,7 +54,7 @@ export default function LoginPage() {
   return (
     <section className="min-h-screen flex flex-col md:flex-row">
 
-      {/* Left Side - Logo & Info */}
+      {/* Left Side */}
       <div className="md:w-1/2 bg-blue-600 flex flex-col items-center justify-center text-white p-10 relative overflow-hidden">
         <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-500 rounded-full opacity-40 animate-pulse"></div>
         <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-blue-400 rounded-full opacity-30 animate-pulse"></div>
@@ -67,19 +72,26 @@ export default function LoginPage() {
             Welcome to <span className="text-yellow-300">Butt Networks</span>
           </h1>
           <p className="text-lg text-white/90">
-            Securely manage your projects and workflows. Log in to access your dashboard and all features.
+            Securely manage your projects and workflows. {isSignup ? "Sign up to create your account." : "Log in to access your dashboard and all features."}
           </p>
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
+      {/* Right Side */}
       <div className="md:w-1/2 flex items-center justify-center p-10">
         <div className="w-full max-w-md bg-white/10 backdrop-blur-md p-10 rounded-3xl shadow-2xl border border-white/20 text-white animate-slideUp">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-8 tracking-wide">
-            Login
+            {isSignup ? "Sign Up" : "Login"}
           </h2>
 
           <div className="space-y-6">
+            {isSignup && (
+              <input
+                id="name"
+                placeholder="Enter Name"
+                className="text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition"
+              />
+            )}
             <input
               id="email"
               placeholder="Enter Email"
@@ -92,7 +104,7 @@ export default function LoginPage() {
               className=" text-black w-full px-5 py-3 rounded-xl bg-white/20 placeholder-gray-500 border border-white/20 focus:outline-none focus:border-blue-400 transition"
             />
             <button
-              onClick={handleLogin}
+              onClick={handleAuth}
               disabled={loading}
               className={`w-full py-3 rounded-xl text-lg font-semibold transition shadow-lg active:scale-95
                 ${loading
@@ -100,19 +112,25 @@ export default function LoginPage() {
                   : "bg-blue-600 hover:bg-blue-700 hover:shadow-blue-700/40"
                 }`}
             >
-              {loading ? "Checking..." : "Login"}
+              {loading ? (isSignup ? "Signing up..." : "Checking...") : (isSignup ? "Sign Up" : "Login")}
             </button>
           </div>
 
+          {/* Toggle Login/Signup */}
+          <p
+            onClick={() => setIsSignup(!isSignup)}
+            className="mt-6 text-center cursor-pointer text-blue-600 transition"
+          >
+            {isSignup ? "Already have an account? Login" : "Don't have an account? Sign Up"}
+          </p>
+
           {error && (
-            <p className="mt-6 text-center text-red-400 font-semibold">
-              {error}
-            </p>
+            <p className="mt-6 text-center text-red-400 font-semibold">{error}</p>
           )}
         </div>
       </div>
 
-      {/* ✅ ADDED: Success Toast (Bottom Right) */}
+      {/* Success Toast */}
       {success && (
         <div className="fixed bottom-6 right-6 z-50 animate-slideUp">
           <div className="flex items-center gap-4 bg-green-600 text-white px-6 py-4 rounded-2xl shadow-2xl border border-green-400">

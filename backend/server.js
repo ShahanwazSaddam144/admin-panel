@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 
 const emailRouter = require("./controllers/mail");
 const Project = require("./controllers/projects");
-const Login = require("./controllers/login");
+const User = require("./controllers/users");
 const Charts = require("./controllers/charts");
 
 dotenv.config();
@@ -54,7 +54,7 @@ app.use(limiter);
 // ===================
 app.use('/', emailRouter);
 app.use('/', Project);
-app.use('/', Login);
+app.use('/', User); 
 app.use('/', Charts);
 
 // ===================

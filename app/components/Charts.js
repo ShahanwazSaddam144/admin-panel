@@ -1,60 +1,20 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from "recharts";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
-
-const usageData = [
-  { name: "C", usage: 60 },
-  { name: "C++", usage: 70 },
-  { name: "JavaScript", usage: 90 },
-  { name: "Python", usage: 85 },
-  { name: "Java", usage: 65 },
-  { name: "Go", usage: 55 },
-  { name: "Rust", usage: 50 },
-  { name: "PHP", usage: 58 },
-];
-
-const likeData = [
-  { name: "JavaScript", value: 35 },
-  { name: "Python", value: 30 },
-  { name: "C++", value: 12 },
-  { name: "Java", value: 10 },
-  { name: "Go", value: 8 },
-  { name: "Rust", value: 5 },
-];
-
-const COLORS = [
-  "#3056B2",
-  "#22c55e",
-  "#facc15",
-  "#38bdf8",
-  "#a855f7",
-  "#f97316",
-];
 
 const Charts = () => {
   const [languageNotes, setLanguageNotes] = useState([]);
   const [fetchError, setFetchError] = useState("");
+  const [protectedData, setProtectedData] = useState(null);
 
   /* ===== DELETE MODAL STATE ===== */
   const [showPopup, setShowPopup] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
   /* ======================
-     FETCH DATA
+     FETCH LANGUAGE NOTES
   ====================== */
   useEffect(() => {
     const fetchLanguageNotes = async () => {
@@ -73,6 +33,33 @@ const Charts = () => {
     };
 
     fetchLanguageNotes();
+  }, []);
+
+  /* ======================
+     FETCH PROTECTED ROUTE
+  ====================== */
+  useEffect(() => {
+    const fetchProtected = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/main-app", {
+          credentials: "include", // if using cookies
+          headers: {
+            "Content-Type": "application/json",          },
+        });
+
+        const data = await res.json();
+
+        if (data.message) {
+          setProtectedData(data);
+        } else {
+          setFetchError("Failed to fetch protected data.");
+        }
+      } catch (error) {
+        setFetchError("Failed to fetch protected data.");
+      }
+    };
+
+    fetchProtected();
   }, []);
 
   /* ======================
@@ -101,54 +88,19 @@ const Charts = () => {
 
   return (
     <div className="w-full p-6 space-y-10 bg-transparent relative">
-      <h2 className="text-2xl font-semibold text-gray-900">
-        Programming Languages Analytics
-      </h2>
 
-      {/* ===== Charts ===== */}
-      <div className="flex flex-col lg:flex-row gap-6">
-        <div className="flex-1 rounded-2xl bg-white/5 backdrop-blur-md p-6 shadow-lg">
-          <h3 className="text-lg font-medium text-gray-800 mb-4">
-            Usage Comparison
-          </h3>
-          <div className="w-full h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={usageData}>
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="usage" fill="#3056B2" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+      {/* ===== PROTECTED DATA ===== */}
+      <div className="flex flex-cols justify-center items-center mt-20">
+        {protectedData ? (
+          <div>
+            <p className="text-gray-900 mb-2 text-[50px] font-extrabold">{protectedData.message}</p>
+            <p className="text-gray-500 font-semibold">
+              {protectedData.user}
+            </p>
           </div>
-        </div>
-
-        <div className="flex-1 rounded-2xl bg-white/5 backdrop-blur-md p-6 shadow-lg">
-          <h3 className="text-lg font-medium text-gray-800 mb-4">
-            Languages People Like Most
-          </h3>
-          <div className="w-full h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={likeData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                >
-                  {likeData.map((_, index) => (
-                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        ) : (
+          <p className="text-gray-500">Loading protected data...</p>
+        )}
       </div>
 
       {fetchError && (
@@ -177,7 +129,7 @@ const Charts = () => {
               {lang.LanguageDetail}
             </p>
 
-            {/* Delete Button with Trash Icon */}
+            {/* Delete Button */}
             <button
               onClick={() => {
                 setSelectedId(lang._id);
