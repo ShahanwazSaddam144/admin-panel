@@ -1,25 +1,28 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import Navbar from "../components/Navbar";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const ProjectDetails = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const [alertMessage, setAlertMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-
   const [deleteProjectId, setDeleteProjectId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // Fetch projects
   const fetchProjects = async () => {
     try {
-      const res = await fetch("http://localhost:5000/projects",{
-        method:"GET",
-        credentials: "include"
+      const res = await fetch("http://localhost:5000/projects", {
+        method: "GET",
+        credentials: "include",
       });
       const data = await res.json();
 
@@ -27,7 +30,6 @@ const ProjectDetails = () => {
         setError("Failed to load projects");
         return;
       }
-
       setProjects(data.projects);
     } catch (err) {
       console.error(err);
@@ -50,7 +52,7 @@ const ProjectDetails = () => {
     try {
       const res = await fetch(`http://localhost:5000/projects/${deleteProjectId}`, {
         method: "DELETE",
-        credentials: "include"
+        credentials: "include",
       });
       const data = await res.json();
 
@@ -74,60 +76,52 @@ const ProjectDetails = () => {
     <>
       <Navbar />
 
-      <section className="mt-10 px-6">
+      <section className="mt-10 px-6 mb-10">
         <h1 className="text-4xl font-bold mb-10 text-center text-gray-900 bg-clip-text">
           Project Details
         </h1>
 
-        {loading && (
-          <p className="text-center text-gray-500">Loading projects...</p>
+        {loading && <p className="text-center text-gray-500">Loading projects...</p>}
+        {error && <p className="text-center text-red-500">{error}</p>}
+
+        {projects.length > 0 && (
+          <Swiper
+            modules={[Navigation, Pagination]}
+            spaceBetween={20}
+            slidesPerView={1} // always 1 slide per view
+            navigation
+            pagination={{ clickable: true }}
+          >
+            {projects.map((project) => (
+              <SwiperSlide key={project._id} className="flex justify-center">
+                <div className="border-gray-200 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-2 w-full">
+                  <h2 className="text-2xl font-semibold mb-3 text-gray-800">{project.ProjectName}</h2>
+                  <p className="text-gray-600 mb-5 line-clamp-3">{project.ProjectDetail}</p>
+                  <div className="flex justify-between items-center">
+                    <Link
+                      href="/ProjectsData"
+                      className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md hover:shadow-lg transition"
+                    >
+                      View More Details →
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setDeleteProjectId(project._id);
+                        setShowDeleteModal(true);
+                      }}
+                      className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md hover:shadow-lg transition"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         )}
-
-        {error && (
-          <p className="text-center text-red-500">{error}</p>
-        )}
-
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <div
-              key={project._id}
-              className="border-gray-200 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-2"
-            >
-              <h2 className="text-2xl font-semibold mb-3 text-gray-800">
-                {project.ProjectName}
-              </h2>
-
-              <p className="text-gray-600 mb-5 line-clamp-3">
-                {project.ProjectDetail}
-              </p>
-
-              <div className="flex justify-between items-center">
-                <a
-                  href={project.ProjectLink}
-                  target="_blank"
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md hover:shadow-lg transition"
-                >
-                  View Project →
-                </a>
-
-                <button
-                  onClick={() => {
-                    setDeleteProjectId(project._id);
-                    setShowDeleteModal(true);
-                  }}
-                  className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md hover:shadow-lg transition"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
 
         {!loading && projects.length === 0 && (
-          <p className="text-center text-gray-500 mt-10">
-            No projects found
-          </p>
+          <p className="text-center text-gray-500 mt-10">No projects found</p>
         )}
       </section>
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import ProjectsData from "../components/ProjectsData";
 import WelcomePanel from "../components/WelcomePanel";
+import ProjectDetails from "../ProjectDetails/ProjectDetails";
 
 const Main = () => {
   const router = useRouter();
@@ -46,7 +47,7 @@ const Main = () => {
     <>
    <Navbar />
     <WelcomePanel />
-    <ProjectsData />
+    <ProjectDetails />
      </>
   );
 };
