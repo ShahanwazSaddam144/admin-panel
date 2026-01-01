@@ -29,6 +29,7 @@ const Home = () => {
   return (
     <>
     <Navbar />
+    
       {/* Hero Section */}
       <section className="bg-transparent">
         <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">

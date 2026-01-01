@@ -90,28 +90,33 @@ const Charts = () => {
   return (
     <div className="w-full p-6 space-y-10 bg-transparent relative">
       {/* ===== PROTECTED DATA ===== */}
-      <div className="flex flex-cols justify-center items-center mt-20">
-        {protectedData ? (
-          <div className="text-center">
-            <h1 className="flex gap-5 text-gray-800 mb-2 text-[50px] font-extrabold">
-              {protectedData.heading}
-              <span className="text-blue-600">{protectedData.message}</span>
-            </h1>
-            <p className="text-green-500 font-semibold text-2xl">
-              {protectedData.user}
-            </p>
-          </div>
-        ) : (
-          <p className="text-gray-500">Loading protected data...</p>
-        )}
-      </div>
+<div className="flex justify-center items-center mt-20">
+  {protectedData ? (
+    <div className="text-center p-8  max-w-4xl">
+      <h1 className="flex flex-wrap justify-center gap-5 text-gray-900 mb-4 text-[50px] font-extrabold">
+        {protectedData.heading}
+        <span className="text-blue-600">{protectedData.message}</span>
+      </h1>
 
-      {fetchError && (
-        <div className="text-red-600 text-center font-semibold">
-          {fetchError}
-        </div>
-      )}
+      <p className="text-gray-800 font-semibold text-2xl mb-4">
+        Our Valuable User: <span className="text-green-800">{protectedData.user}</span>
+      </p>
 
+      <p className="text-gray-700 text-lg leading-relaxed">
+        You have full access to the dashboard. Manage your projects and settings securely. 
+        All your actions are logged for security purposes. Enjoy your workflow!
+      </p>
+    </div>
+  ) : (
+    <p className="text-gray-400 text-lg animate-pulse">Loading protected data...</p>
+  )}
+
+  {fetchError && (
+    <div className="text-red-500 text-center font-semibold mt-4 animate-pulse">
+      {fetchError}
+    </div>
+  )}
+</div>
 
 
       {/* ===== Language Notes Section ===== */}

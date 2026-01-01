@@ -74,7 +74,7 @@ router.post("/logout", (req, res) => {
 
 /* ======================
    PROTECTED ROUTE
-====================== */
+===================== */
 router.get("/main-app", protect, (req, res) => {
   res.json({
     heading: "Welcome to",
@@ -82,6 +82,7 @@ router.get("/main-app", protect, (req, res) => {
     user: req.user.name,
   });
 });
+
 
 
 /* ======================
