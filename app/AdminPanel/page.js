@@ -19,8 +19,7 @@ const Main = () => {
         });
 
         if (!res.ok) {
-          console.log(res)
-          // router.replace("/");
+          router.replace("/");
         } else {
           setLoading(false); // Authenticated → show page
         }
