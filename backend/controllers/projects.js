@@ -28,8 +28,6 @@ router.post('/projects',  async (req, res) => {
             StartDate: start,
             EndDate: end,
             DaysConsumed,
-            userEmail: req.user.email, // from JWT
-            userName: req.user.name,   // from JWT
         });
 
         const savedProject = await newProject.save();
@@ -55,7 +53,6 @@ router.get("/projects", async (req, res) => {
   try {
     // Fetch projects linked to the logged-in user
     const projects = await Projects.find({
-        userEmail: req.user.email
     }).sort({ createdAt: -1 });
 
     res.json({ success: true, projects });
@@ -67,12 +64,10 @@ router.get("/projects", async (req, res) => {
 /* ======================
    DELETE PROJECT
 ====================== */
-router.delete('/projects/:id', async (req,res)=>{
+router.delete('/projects/:id', async (req, res) => {
     try {
-        // Only allow deletion of projects owned by this user
-        const project = await Projects.findOneAndDelete({
-            _id: req.params.id,
-            userEmail: req.user.email
+        // Assuming you have req.user.id from authentication middleware
+        const project = await Projects.findOneAndDelete(req.params.id,{
         });
 
         if (!project) {
@@ -80,9 +75,10 @@ router.delete('/projects/:id', async (req,res)=>{
         }
 
         res.json({ success: true, message: 'Project deleted successfully!' });
-    } catch(err){
+    } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
 });
+
 
 module.exports = router;
