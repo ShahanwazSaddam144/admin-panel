@@ -100,6 +100,15 @@ const Navbar = () => {
                   Project Panel
                 </Link>
 
+                  <Link
+                  href="/LanguagePanel"
+                  className="block px-4 py-2 text-white hover:bg-blue-600 transition"
+                  onClick={() => setMenu(false)}
+                >
+                  Language Panel
+                </Link>
+
+
                 {/* Divider */}
                 <div className="border-t border-slate-700"></div>
 

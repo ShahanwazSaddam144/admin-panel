@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const emailRouter = require("./controllers/mail");
 const Project = require("./controllers/projects");
 const User = require("./controllers/users");
-const Charts = require("./controllers/charts");
+const LanguageDetails = require("./controllers/language");
 
 dotenv.config();
 
@@ -55,7 +55,7 @@ app.use(limiter);
 app.use('/', emailRouter);
 app.use('/', Project);
 app.use('/', User); 
-app.use('/', Charts);
+app.use('/', LanguageDetails);
 
 // ===================
 // MongoDB Connection

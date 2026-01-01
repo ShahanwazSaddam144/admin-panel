@@ -37,7 +37,7 @@ const ChartsData = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/charts", {
+      const response = await fetch("http://localhost:5000/language", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -116,7 +116,7 @@ const ChartsData = () => {
         </button>
       </form>
 
-      <Link href="/MainApp">
+      <Link href="/AdminPanel">
         <button
           className="block m-auto mt-6 w-[160px] h-[50px] text-white font-semibold bg-blue-600
             rounded-lg hover:bg-blue-700 transition-colors cursor-pointer mb-10"

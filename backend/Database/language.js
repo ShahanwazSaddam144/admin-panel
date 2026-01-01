@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const chartsSchema = new mongoose.Schema(
+const languageSchema = new mongoose.Schema(
   {
     LanguageName: {
       type: String,
@@ -16,4 +16,4 @@ const chartsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Charts", chartsSchema);
+module.exports = mongoose.model("LanguageDetails", languageSchema);

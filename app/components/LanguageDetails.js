@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 
-const Charts = () => {
+const LanguageDetails = () => {
   const [languageNotes, setLanguageNotes] = useState([]);
   const [fetchError, setFetchError] = useState("");
   const [protectedData, setProtectedData] = useState(null);
@@ -19,13 +19,14 @@ const Charts = () => {
   useEffect(() => {
     const fetchLanguageNotes = async () => {
       try {
-        const res = await fetch("http://localhost:5000/charts");
+        const res = await fetch("http://localhost:5000/language");
         const data = await res.json();
 
-        if (data.success && data.charts) {
+        if (data.success && data.charts?.length > 0) {
           setLanguageNotes(data.charts);
         } else {
-          setFetchError("Failed to load language details.");
+          setLanguageNotes([]);
+          setFetchError(""); // No error, just empty
         }
       } catch (error) {
         setFetchError("Failed to load language details.");
@@ -42,12 +43,9 @@ const Charts = () => {
     const fetchProtected = async () => {
       try {
         const res = await fetch("http://localhost:5000/main-app", {
-          credentials: "include", // if using cookies
-          headers: {
-            "Content-Type": "application/json",
-          },
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
         });
-
         const data = await res.json();
 
         if (data.message) {
@@ -68,7 +66,7 @@ const Charts = () => {
   ====================== */
   const confirmDelete = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/charts/${selectedId}`, {
+      const res = await fetch(`http://localhost:5000/language/${selectedId}`, {
         method: "DELETE",
       });
 
@@ -90,76 +88,77 @@ const Charts = () => {
   return (
     <div className="w-full p-6 space-y-10 bg-transparent relative">
       {/* ===== PROTECTED DATA ===== */}
-<div className="flex justify-center items-center mt-20">
-  {protectedData ? (
-    <div className="text-center p-8  max-w-4xl">
-      <h1 className="flex flex-wrap justify-center gap-5 text-gray-900 mb-4 text-[50px] font-extrabold">
-        {protectedData.heading}
-        <span className="text-blue-600">{protectedData.message}</span>
-      </h1>
+      <div className="flex justify-center items-center mt-20">
+        {protectedData ? (
+          <div className="text-center p-8 max-w-4xl">
+            <h1 className="flex flex-wrap justify-center gap-5 text-gray-900 mb-4 text-[50px] font-extrabold">
+              {protectedData.heading}
+              <span className="text-blue-600">{protectedData.message}</span>
+            </h1>
+            <p className="text-gray-800 font-semibold text-2xl mb-4">
+              Our Valuable User:{" "}
+              <span className="text-green-800">{protectedData.user}</span>
+            </p>
+            <p className="text-gray-700 text-lg leading-relaxed">
+              You have full access to the dashboard. Manage your projects and
+              settings securely. All your actions are logged for security
+              purposes. Enjoy your workflow!
+            </p>
+          </div>
+        ) : (
+          <p className="text-gray-400 text-lg animate-pulse">
+            Loading protected data...
+          </p>
+        )}
+      </div>
 
-      <p className="text-gray-800 font-semibold text-2xl mb-4">
-        Our Valuable User: <span className="text-green-800">{protectedData.user}</span>
-      </p>
-
-      <p className="text-gray-700 text-lg leading-relaxed">
-        You have full access to the dashboard. Manage your projects and settings securely. 
-        All your actions are logged for security purposes. Enjoy your workflow!
-      </p>
-    </div>
-  ) : (
-    <p className="text-gray-400 text-lg animate-pulse">Loading protected data...</p>
-  )}
-
-  {fetchError && (
-    <div className="text-red-500 text-center font-semibold mt-4 animate-pulse">
-      {fetchError}
-    </div>
-  )}
-</div>
-
+      {/* ===== FETCH ERROR ===== */}
+      {fetchError && (
+        <div className="text-red-500 text-center font-semibold mt-4 animate-pulse">
+          {fetchError}
+        </div>
+      )}
 
       {/* ===== Language Notes Section ===== */}
       <header className="text-center mt-20 mb-6">
-        <h1 className="font-bold text-[35px] text-gray-800">
-          Language Details
-        </h1>
+        <h1 className="font-bold text-[35px] text-gray-800">Language Details</h1>
       </header>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {languageNotes.map((lang) => (
-          <div
-            key={lang._id}
-            className="rounded-2xl bg-white/5 backdrop-blur-md p-5 shadow-lg flex flex-col h-full"
-          >
-            <h4 className="text-lg font-semibold text-blue-700 mb-2">
-              {lang.LanguageName}
-            </h4>
-            <p className="text-sm text-gray-700 leading-relaxed mb-4 flex-grow">
-              {lang.LanguageDetail}
-            </p>
-
-            {/* Delete Button */}
-            <button
-              onClick={() => {
-                setSelectedId(lang._id);
-                setShowPopup(true);
-              }}
-              className="mt-auto flex items-center justify-center gap-2 px-3 py-2
-                bg-red-500 text-white rounded-md hover:bg-red-600 transition w-[200px]"
+        {languageNotes.length > 0 ? (
+          languageNotes.map((lang) => (
+            <div
+              key={lang._id}
+              className="rounded-2xl bg-white/5 backdrop-blur-md p-5 shadow-lg flex flex-col h-full"
             >
-              <Trash2 size={16} /> Delete
-            </button>
-          </div>
-        ))}
+              <h4 className="text-lg font-semibold text-blue-700 mb-2">
+                {lang.LanguageName}
+              </h4>
+              <p className="text-sm text-gray-700 leading-relaxed mb-4 flex-grow">
+                {lang.LanguageDetail}
+              </p>
+
+              {/* Delete Button */}
+              <button
+                onClick={() => {
+                  setSelectedId(lang._id);
+                  setShowPopup(true);
+                }}
+                className="mt-auto flex items-center justify-center gap-2 px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition w-[200px]"
+              >
+                <Trash2 size={16} /> Delete
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-500 col-span-full mt-10">
+            No language data available.
+          </p>
+        )}
       </div>
 
-      <Link href="/ChartsData">
-        <button
-          className="block m-auto mt-6 w-[160px] h-[50px]
-          text-white font-semibold bg-blue-600 rounded-lg
-          hover:bg-blue-700 transition mb-10"
-        >
+      <Link href="/LanguagePanel">
+        <button className="block m-auto mt-6 w-[160px] h-[50px] text-white font-semibold bg-blue-600 rounded-lg hover:bg-blue-700 transition mb-10">
           Add more Data
         </button>
       </Link>
@@ -199,4 +198,4 @@ const Charts = () => {
   );
 };
 
-export default Charts;
+export default LanguageDetails;

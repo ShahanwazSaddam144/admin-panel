@@ -1,9 +1,9 @@
 const express = require("express");
-const Charts = require("../Database/charts");
+const Charts = require("../Database/language");
 
 const router = express.Router();
 
-router.post("/charts", async (req, res) => {
+router.post("/language", async (req, res) => {
   try {
     const { LanguageName, LanguageDetail } = req.body;
 
@@ -34,7 +34,7 @@ router.post("/charts", async (req, res) => {
   }
 });
 
-router.get("/charts", async (req, res) => {
+router.get("/language", async (req, res) => {
   try {
     const charts = await Charts.find().sort({ createdAt: -1 });
     res.json({ success: true, charts });
@@ -43,7 +43,7 @@ router.get("/charts", async (req, res) => {
   }
 });
 
-router.delete('/charts/:id', async (req,res)=>{
+router.delete('/language/:id', async (req,res)=>{
   try{
     const deleteCharts = await Charts.findByIdAndDelete(req.params.id);
     if(!deleteCharts){

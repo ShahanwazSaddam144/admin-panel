@@ -3,9 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
-import Charts from "../components/Charts";
 import ProjectsData from "../components/ProjectsData";
-import EmailSender from "../components/EmailSender";
+import LanguageDetails from "../components/LanguageDetails";
 
 const Main = () => {
   const router = useRouter();
@@ -46,7 +45,7 @@ const Main = () => {
   return (
     <>
    <Navbar />
-    <Charts />
+    <LanguageDetails />
     <ProjectsData />
      </>
   );
