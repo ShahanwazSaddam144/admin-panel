@@ -41,6 +41,9 @@ const Navbar = () => {
 
   return (
     <>
+      {/* ======================
+          NAVBAR
+      ====================== */}
       <nav className="backdrop-blur-md bg-white border-b fixed top-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           {/* Logo */}
@@ -51,8 +54,8 @@ const Navbar = () => {
           </Link>
 
           {/* Right Side */}
-          <div className="flex items-center gap-4 relative">
-            {/* User Initial → Profile Page */}
+          <div className="flex items-center gap-4">
+            {/* User Initial */}
             {user && (
               <div
                 onClick={() => router.push("/userProfile")}
@@ -67,53 +70,123 @@ const Navbar = () => {
 
             {/* Menu Button */}
             <button
-              onClick={() => setMenu(!menu)}
+              onClick={() => setMenu(true)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
             >
               Menu
             </button>
-
-            {/* Menu Dropdown */}
-            {menu && (
-              <div className="absolute right-0 top-14 bg-slate-800 rounded-lg w-48 overflow-hidden z-40">
-                <Link
-                  href="https://buttnetworks.com/"
-                  target="_blank"
-                  className="block px-4 py-2 text-white hover:bg-blue-600"
-                >
-                  Our Website
-                </Link>
-
-                <Link
-                  href="/ProjectPanel"
-                  className="block px-4 py-2 text-white hover:bg-blue-600"
-                >
-                  Project Panel
-                </Link>
-
-                <Link
-                  href="/LanguagePanel"
-                  className="block px-4 py-2 text-white hover:bg-blue-600"
-                >
-                  Language Panel
-                </Link>
-
-                <div className="border-t border-slate-700" />
-
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-red-400 hover:bg-red-600 hover:text-white"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </nav>
 
       {/* Spacer */}
       <div className="h-16" />
+
+      {/* ======================
+          SIDEBAR OVERLAY
+      ====================== */}
+      {menu && (
+        <>
+          {/* Overlay */}
+          <div
+            onClick={() => setMenu(false)}
+            className="fixed inset-0 bg-black/40 z-40"
+          />
+
+          {/* Sidebar */}
+          <aside className="fixed right-0 top-0 h-full w-80 bg-white z-50 shadow-2xl animate-slide-in">
+            <div className="p-6 flex flex-col h-full">
+
+              {/* Header */}
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-xl font-bold text-gray-800">
+                  Menu
+                </h2>
+                <button
+                  onClick={() => setMenu(false)}
+                  className="text-gray-500 hover:text-gray-800 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Links */}
+              <nav className="flex flex-col gap-4 text-gray-700">
+
+                <Link
+                  href="/AdminPanel"
+                  onClick={() => setMenu(false)}
+                  className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  Dashboard
+                </Link>
+
+                <Link
+                  href="/ProjectPanel"
+                  onClick={() => setMenu(false)}
+                  className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  Project Panel
+                </Link>
+
+                <Link
+                  href="/LanguagePanel"
+                  onClick={() => setMenu(false)}
+                  className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  Language Panel
+                </Link>
+
+                <Link
+                  href="/userProfile"
+                  onClick={() => setMenu(false)}
+                  className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  Profile
+                </Link>
+
+                <Link
+                  href="/about"
+                  onClick={() => setMenu(false)}
+                  className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  About
+                </Link>
+
+                <Link
+                  href="/faq"
+                  onClick={() => setMenu(false)}
+                  className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  FAQ
+                </Link>
+
+                <a
+                  href="https://buttnetworks.com/"
+                  target="_blank"
+                  onClick={() => setMenu(false)}
+                  className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  Our Website
+                </a>
+
+              </nav>
+
+              {/* Divider */}
+              <div className="my-6 border-t" />
+
+              {/* Logout */}
+              <button
+                onClick={handleLogout}
+                className="mt-auto px-4 py-2 text-left rounded-lg
+                text-red-600 hover:bg-red-600 hover:text-white transition"
+              >
+                Logout
+              </button>
+            </div>
+          </aside>
+        </>
+      )}
     </>
   );
 };

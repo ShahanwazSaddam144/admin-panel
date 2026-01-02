@@ -43,7 +43,7 @@ const Home_ = () => {
           <div className="relative flex items-center gap-4">
             <Link href="/Login">
             <button className="px-8 py-3 rounded-xl bg-blue-600 text-white font-semibold shadow-lg hover:bg-blue-700 transition active:scale-95">
-              Login</button>
+              Get Started</button>
             </Link>
           </div>
       </div>
