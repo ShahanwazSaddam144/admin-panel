@@ -47,6 +47,8 @@ export default function AuthPage() {
     setSuccess("");
 
     const name = document.getElementById("name")?.value;
+    const company = document.getElementById("company")?.value;
+    const role = document.getElementById("role")?.value;
     const email = document.getElementById("email").value;
     const pass = password;
 
@@ -55,7 +57,9 @@ export default function AuthPage() {
         ? "http://localhost:5000/signup"
         : "http://localhost:5000/login";
 
-      const bodyData = isSignup ? { name, email, pass } : { email, pass };
+      const bodyData = isSignup
+        ? { name, email, pass, company, role }
+        : { email, pass };
 
       const res = await fetch(endpoint, {
         method: "POST",
@@ -95,26 +99,48 @@ export default function AuthPage() {
 
   return (
     <section className="min-h-screen flex flex-col md:flex-row">
-      {/* LEFT */}
-      <div className="md:w-1/2 bg-blue-600 flex items-center justify-center p-10 text-white">
-        <div>
-          <Image
-            src="/butt.png"
-            alt="Butt Networks"
-            width={150}
-            height={150}
-            className="mx-auto rounded-full mb-6"
-          />
-          <h1 className="text-4xl font-bold mb-3">
-            Welcome to <span className="text-yellow-300">Butt Networks</span>
-          </h1>
-          <p>
-            {isSignup
-              ? "Create your account to get started."
-              : "Login to access your admin dashboard."}
-          </p>
-        </div>
-      </div>
+     {/* LEFT */}
+<div className="md:w-1/2 relative flex items-center justify-center p-10 text-white 
+                bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 overflow-hidden">
+  <div className="relative z-10">
+    <Image
+      src="/butt.png"
+      alt="Butt Networks"
+      width={150}
+      height={150}
+      className="mx-auto rounded-full mb-6"
+    />
+    <h1 className="text-4xl font-bold mb-3">
+      Butt Networks
+      <span className="text-yellow-300"> Admin Panel</span>
+    </h1>
+    <p className="mb-4">
+      {isSignup
+        ? "Create your account to get started."
+        : "Login to access your admin dashboard."}
+    </p>
+
+    {/* SECURITY POINTS */}
+    <ul className="space-y-4 mt-4">
+      <li className="text-green-300 font-semibold opacity-0 animate-fadeIn">
+        🔒 Secure login with strong password enforcement
+      </li>
+      <li className="text-yellow-300 font-semibold opacity-0 animate-fadeIn delay-200">
+        📡 Encrypted data transmission for all user info
+      </li>
+      <li className="text-blue-200 font-semibold opacity-0 animate-fadeIn delay-400">
+        🛡️ Role-based access control for sensitive actions
+      </li>
+      <li className="text-pink-300 font-semibold opacity-0 animate-fadeIn delay-600">
+        👀 Real-time monitoring of suspicious activity
+      </li>
+    </ul>
+  </div>
+
+  {/* Decorative circles */}
+  <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-500 rounded-full opacity-30 blur-3xl"></div>
+  <div className="absolute bottom-10 right-20 w-32 h-32 bg-blue-400 rounded-full opacity-20 blur-2xl"></div>
+</div>
 
       {/* RIGHT */}
       <div className="md:w-1/2 flex items-center justify-center p-10">
@@ -147,7 +173,6 @@ export default function AuthPage() {
               onChange={(e) => validatePassword(e.target.value)}
               className="w-full px-4 py-3 rounded-xl text-black pr-12"
             />
-
             <button
               type="button"
               onClick={() => setShowPass(!showPass)}
@@ -160,7 +185,7 @@ export default function AuthPage() {
           {/* PASSWORD FEEDBACK */}
           {isSignup && (
             <p
-              className={`text-sm mb-3 ${
+              className={`text-sm mb-4 ${
                 passwordStrength() === "Strong"
                   ? "text-green-500"
                   : passwordStrength() === "Good"
@@ -171,6 +196,22 @@ export default function AuthPage() {
               Password strength: {passwordStrength()}
               {passwordError && ` • ${passwordError}`}
             </p>
+          )}
+
+          {/* COMPANY & ROLE */}
+          {isSignup && (
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+              <input
+                id="company"
+                placeholder="Company Name"
+                className="w-full px-4 py-3 rounded-xl text-black"
+              />
+              <input
+                id="role"
+                placeholder="Role / Profession"
+                className="w-full px-4 py-3 rounded-xl text-black"
+              />
+            </div>
           )}
 
           <button
@@ -194,9 +235,7 @@ export default function AuthPage() {
               : "Don't have an account? Sign Up"}
           </p>
 
-          {error && (
-            <p className="text-center mt-4 text-red-500">{error}</p>
-          )}
+          {error && <p className="text-center mt-4 text-red-500">{error}</p>}
         </div>
       </div>
 

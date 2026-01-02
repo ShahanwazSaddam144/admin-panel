@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import ProjectsData from "../components/ProjectsData";
 import WelcomePanel from "../components/WelcomePanel";
 import ProjectDetails from "../ProjectDetails/ProjectDetails";
+import Footer from "../components/Footer";
 
 const Main = () => {
   const router = useRouter();
@@ -48,6 +49,7 @@ const Main = () => {
    <Navbar />
     <WelcomePanel />
     <ProjectDetails />
+    <Footer />
      </>
   );
 };

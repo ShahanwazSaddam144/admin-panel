@@ -14,7 +14,6 @@ const WelcomePanel = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
-
   /* ======================
      FETCH PROTECTED ROUTE
   ====================== */
@@ -25,9 +24,10 @@ const WelcomePanel = () => {
           credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
+
         const data = await res.json();
 
-        if (data.message) {
+        if (data?.user) {
           setProtectedData(data);
         } else {
           setFetchError("Failed to fetch protected data.");
@@ -40,44 +40,55 @@ const WelcomePanel = () => {
     fetchProtected();
   }, []);
 
-
   return (
     <>
-    <div className="w-full p-6 space-y-10 bg-transparent relative">
-      {/* ===== PROTECTED DATA ===== */}
-      <div className="flex justify-center items-center mt-20">
-        {protectedData ? (
-          <div className="text-center p-8 max-w-4xl">
-            <h1 className="flex flex-wrap justify-center gap-5 text-[40px] sm:text-[50px] text-gray-900 mb-4 font-extrabold">
-              {protectedData.heading}
-              <span className="text-blue-600 text-[25px] sm:text-[50px]">{protectedData.message}</span>
-            </h1>
-            <p className="text-gray-800 font-semibold text-[18px] sm:text-2xl mb-4">
-              Our Valuable User:{" "}
-              <span className="text-green-800">{protectedData.user}</span>
+      <div className="w-full p-6 space-y-10 bg-transparent relative">
+        {/* ===== PROTECTED DATA ===== */}
+        <div className="flex justify-center items-center mt-20">
+          {protectedData ? (
+            <div className="text-center p-8 max-w-4xl">
+              {/* ===== HEADING ===== */}
+              <h1 className="flex flex-wrap justify-center gap-3 text-[38px] sm:text-[55px] text-gray-900 mb-6 font-extrabold">
+                Welcome to
+                <span className="text-blue-600">Our Dashboard</span>
+              </h1>
+
+              {/* ===== PROFESSIONAL USER NAME ===== */}
+              <div className="mb-6">
+                <p className="text-xs sm:text-sm uppercase tracking-widest text-gray-600 mb-1">
+                  Signed in as
+                </p>
+                <p className="text-[20px] sm:text-2xl font-semibold text-gray-900">
+                  {protectedData.user}
+                </p>
+              </div>
+
+              {/* ===== DESCRIPTION ===== */}
+              <p className="text-gray-700 sm:text-lg text-[16px] leading-relaxed max-w-2xl mx-auto">
+                You have full access to the dashboard. Manage your projects and
+                settings securely. All activities are monitored to ensure
+                system integrity and data protection.
+              </p>
+            </div>
+          ) : (
+            <p className="text-gray-400 text-lg animate-pulse">
+              Loading protected data...
             </p>
-            <p className="text-gray-700 sm:text-lg text-[16px] leading-relaxed">
-              You have full access to the dashboard. Manage your projects and
-              settings securely. All your actions are logged for security
-              purposes. Enjoy your workflow!
-            </p>
+          )}
+        </div>
+
+        {/* ===== FETCH ERROR ===== */}
+        {fetchError && (
+          <div className="text-red-500 text-center font-semibold mt-4 animate-pulse">
+            {fetchError}
           </div>
-        ) : (
-          <p className="text-gray-400 text-lg animate-pulse">
-            Loading protected data...
-          </p>
         )}
       </div>
 
-      {/* ===== FETCH ERROR ===== */}
-      {fetchError && (
-        <div className="text-red-500 text-center font-semibold mt-4 animate-pulse">
-          {fetchError}
-        </div>
-      )}
-    </div>
-    
-    { /*<LanguageData /> */}
+      {/* OPTIONAL: LANGUAGE DATA SECTION */}
+      {/*
+        <LanguageData />
+      */}
     </>
   );
 };

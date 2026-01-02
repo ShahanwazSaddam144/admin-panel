@@ -10,6 +10,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
+import Footer from "./Footer";
 
 const LanguageData = () => {
   const [languageNotes, setLanguageNotes] = useState([]);
@@ -162,6 +163,7 @@ const LanguageData = () => {
           </div>
         </div>
       )}
+      <Footer />
     </section>
   );
 };

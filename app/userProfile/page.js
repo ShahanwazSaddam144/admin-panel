@@ -3,15 +3,11 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { useRouter } from "next/navigation";
-
-const roles = ["Administrator", "Job", "Business", "Student", "Other"];
+import Footer from "../components/Footer";
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [role, setRole] = useState("Administrator");
-  const [extraInfo, setExtraInfo] = useState("");
-  const [showSavedPopup, setShowSavedPopup] = useState(false);
   const router = useRouter();
 
   /* ======================
@@ -25,12 +21,6 @@ const UserProfile = () => {
         });
         const data = await res.json();
         setUser(data);
-
-        const savedRole = localStorage.getItem("userRole") || data.role || "Administrator";
-        const savedInfo = localStorage.getItem("userExtraInfo") || data.extraInfo || "";
-
-        setRole(savedRole);
-        setExtraInfo(savedInfo);
       } catch {
         console.error("Failed to fetch user");
       }
@@ -53,16 +43,6 @@ const UserProfile = () => {
     }
   };
 
-  /* ======================
-     SAVE PROFILE LOCALLY & SHOW POPUP
-  ====================== */
-  const handleSave = () => {
-    localStorage.setItem("userRole", role);
-    localStorage.setItem("userExtraInfo", extraInfo);
-    setShowSavedPopup(true);
-    setTimeout(() => setShowSavedPopup(false), 1500);
-  };
-
   if (!user) {
     return (
       <>
@@ -82,7 +62,11 @@ const UserProfile = () => {
           {/* LEFT: Avatar */}
           <div className="flex flex-col items-center lg:items-start gap-4 flex-shrink-0">
             <div className="w-24 h-24 bg-blue-600 text-white rounded-full flex items-center justify-center text-4xl font-extrabold">
-              {user.name.charAt(0).toUpperCase()}
+              {user.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()}
             </div>
             <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
             <p className="text-gray-500">{user.email}</p>
@@ -105,54 +89,25 @@ const UserProfile = () => {
               </div>
 
               <div className="bg-gray-50 rounded-xl p-4">
-                <p className="text-sm text-gray-500">Account Role</p>
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
-                >
-                  {roles.map((r) => (
-                    <option key={r} value={r}>
-                      {r}
-                    </option>
-                  ))}
-                </select>
+                <p className="text-sm text-gray-500">Company</p>
+                <p className="font-semibold text-gray-800">
+                  {user.company || "— — —"}
+                </p>
               </div>
 
               <div className="bg-gray-50 rounded-xl p-4">
-                <p className="text-sm text-gray-500">Member Since</p>
-                <p className="font-semibold text-gray-800">— — —</p>
+                <p className="text-sm text-gray-500">Role</p>
+                <p className="font-semibold text-gray-800">
+                  {user.role || "— — —"}
+                </p>
               </div>
             </div>
 
-            {/* EXTRA INFO */}
-            <div className="bg-gray-50 rounded-xl p-4">
-              <p className="text-sm text-gray-500 mb-2">Additional Info</p>
-              <textarea
-                placeholder={
-                  role === "Job"
-                    ? "Enter your job title or company"
-                    : role === "Business"
-                    ? "Enter your business name or description"
-                    : "Additional info about you"
-                }
-                value={extraInfo}
-                onChange={(e) => setExtraInfo(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* ACTIONS */}
-            <div className="flex flex-col lg:flex-row gap-4">
-              <button
-                onClick={handleSave}
-                className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-              >
-                Save Profile
-              </button>
+            {/* DELETE ACCOUNT BUTTON */}
+            <div className="flex justify-start mt-4">
               <button
                 onClick={() => setShowDeleteModal(true)}
-                className="flex-1 px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
               >
                 Delete Account
               </button>
@@ -194,18 +149,7 @@ const UserProfile = () => {
           </div>
         </div>
       )}
-
-      {/* ======================
-          PROFILE SAVED POPUP
-      ====================== */}
-      {showSavedPopup && (
-        <div className="fixed bottom-6 right-6 z-50 animate-slideUp">
-          <div className="flex items-center gap-3 bg-green-600 text-white px-6 py-4 rounded-2xl shadow-2xl border border-green-400">
-            <span className="text-lg font-semibold">✅</span>
-            <p className="font-medium">Profile Saved!</p>
-          </div>
-        </div>
-      )}
+      <Footer />
     </>
   );
 };

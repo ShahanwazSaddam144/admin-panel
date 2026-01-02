@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Footer from "./Footer";
 
 const ProjectsManager = () => {
   const [formData, setFormData] = useState({
@@ -102,6 +103,7 @@ const ProjectsManager = () => {
   };
 
   return (
+    <>
     <section className="mt-10 px-4 md:px-0">
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
         Add New Project
@@ -205,7 +207,7 @@ const ProjectsManager = () => {
       </form>
 
       <Link href="/ProjectsData">
-        <button className="block m-auto mt-6 w-[160px] h-[50px] text-white font-semibold bg-blue-600 rounded-lg hover:bg-blue-700">
+        <button className="block m-auto mt-6 w-[160px] mb-10 h-[50px] text-white font-semibold bg-blue-600 rounded-lg hover:bg-blue-700">
           View Projects
         </button>
       </Link>
@@ -221,6 +223,7 @@ const ProjectsManager = () => {
         </div>
       )}
     </section>
+    </>
   );
 };
 
