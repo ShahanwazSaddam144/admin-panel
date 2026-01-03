@@ -49,7 +49,7 @@ app.use(limiter);
 // ===================
 // Routes
 // ===================
-app.use('/', emailRouter);
+//app.use('/', emailRouter);
 app.use('/', Project);
 app.use('/', User); 
 app.use('/', LanguageDetails);

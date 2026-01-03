@@ -1,65 +1,105 @@
 const express = require("express");
-const Charts = require("../Database/language");
+const Language = require("../Database/language");
 const protect = require("../middleware/protect");
 
 const router = express.Router();
 
+/* ======================
+   CREATE LANGUAGE
+====================== */
 router.post("/language", protect, async (req, res) => {
   try {
-    const { LanguageName, LanguageDetail } = req.body;
+    const {
+      LanguageName,
+      LanguageDetail,
+      Category,
+      Difficulty,
+      ReleasedYear,
+      Frameworks,
+      Website,
+      UseCases,
+    } = req.body;
 
-    if (!LanguageName || !LanguageDetail) {
+    if (
+      !LanguageName ||
+      !LanguageDetail ||
+      !Category ||
+      !Difficulty ||
+      !ReleasedYear ||
+      !Frameworks ||
+      !Website ||
+      !UseCases
+    ) {
       return res.status(400).json({
         success: false,
         message: "Please fill all fields",
       });
     }
 
-    const newChart = new Charts({
+    const newLanguage = new Language({
       userid: req.user.uid,
       LanguageName,
       LanguageDetail,
+      Category,
+      Difficulty,
+      ReleasedYear,
+      Frameworks,
+      Website,
+      UseCases,
     });
 
-    const savedChart = await newChart.save();
+    const savedLanguage = await newLanguage.save();
 
     return res.status(201).json({
       success: true,
       message: "Chart data saved successfully",
-      data: savedChart,
+      data: savedLanguage,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       success: false,
-      message: "Server error while saving chart data",
+      message: "Server error while saving language data",
     });
   }
 });
 
+/* ======================
+   GET USER LANGUAGES
+====================== */
 router.get("/language", protect, async (req, res) => {
   try {
     const uid = req.user.uid;
-    const charts = await Charts.find({ userid: uid }).sort({ createdAt: -1 });
-    res.json({
+
+    const charts = await Language.find({ userid: uid }).sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json({
       success: true,
       count: charts.length,
       charts,
     });
   } catch (err) {
-    res.json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 });
 
+/* ======================
+   DELETE LANGUAGE
+====================== */
 router.delete("/language/:id", protect, async (req, res) => {
   try {
     const chartId = req.params.id;
     const uid = req.user.uid;
 
-    const deletedChart = await Charts.findOneAndDelete({
+    const deletedChart = await Language.findOneAndDelete({
       _id: chartId,
       userid: uid,
     });
-
 
     if (!deletedChart) {
       return res.status(404).json({
@@ -68,9 +108,15 @@ router.delete("/language/:id", protect, async (req, res) => {
       });
     }
 
-    res.json({ success: true, message: "Chart deleted successfully!" });
+    res.status(200).json({
+      success: true,
+      message: "Chart deleted successfully!",
+    });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 });
 
