@@ -47,7 +47,7 @@ const Navbar = () => {
       <nav className="backdrop-blur-md bg-white border-b fixed top-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           {/* Logo */}
-          <Link href="/AdminPanel">
+          <Link href="/Admin-Dashboard">
             <h1 className="text-gray-900 font-extrabold text-2xl cursor-pointer">
               Butt Networks
             </h1>
@@ -114,7 +114,7 @@ const Navbar = () => {
               <nav className="flex flex-col gap-4 text-gray-700">
 
                 <Link
-                  href="/AdminPanel"
+                  href="/Admin-Dashboard"
                   onClick={() => setMenu(false)}
                   className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
                 >

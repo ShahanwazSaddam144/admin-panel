@@ -76,7 +76,7 @@ export default function AuthPage() {
             ? "Signup successful! Redirecting..."
             : "Login successful! Redirecting..."
         );
-        setTimeout(() => router.replace("/AdminPanel"), 1200);
+        setTimeout(() => router.replace("/Admin-Dashboard"), 1200);
       } else {
         setError(data.message || "Authentication failed");
       }

@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const router = express.Router();
 const User = require("../Database/users");
 const protect = require("../middleware/protect");
@@ -11,10 +12,10 @@ const JWT_SECRET = process.env.JWT_SECRET;
    Nodemailer Transport
 ====================== */
 const transporter = nodemailer.createTransport({
-  service: "Gmail", 
+  service: "Gmail",
   auth: {
-    user: process.env.EMAIL_USER, 
-    pass: process.env.EMAIL_PASS, 
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -32,10 +33,13 @@ router.post("/signup", async (req, res) => {
     if (existingUser)
       return res.status(409).json({ message: "User already exists" });
 
+    // 🔐 HASH PASSWORD
+    const hashedPassword = await bcrypt.hash(pass, 12);
+
     const user = await User.create({
       name,
       email,
-      pass,
+      pass: hashedPassword,
       company,
       role,
     });
@@ -46,10 +50,9 @@ router.post("/signup", async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    // Set cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: false, // change to true in production
       sameSite: "lax",
       maxAge: 60 * 60 * 1000,
     });
@@ -63,38 +66,26 @@ router.post("/signup", async (req, res) => {
       subject: "Welcome to Butt Networks Admin Panel",
       html: `
       <div style="font-family: Arial, sans-serif; background: #f4f4f4; padding: 30px;">
-        <div style="max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1);">
+        <div style="max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 10px;">
           <h1 style="color: #0a58ca; text-align: center;">Welcome, ${user.name}!</h1>
-          <p style="font-size: 16px; color: #333;">
-            Thank you for creating an account with <strong>Butt Networks Admin Panel</strong>.
-          </p>
-          <ul style="color: #333; font-size: 14px;">
-            <li>🔒 Secure login with strong password enforcement</li>
-            <li>📡 Encrypted data transmission for all user info</li>
-            <li>🛡️ Role-based access control for sensitive actions</li>
-            <li>👀 Real-time monitoring of suspicious activity</li>
+          <p>Thank you for creating an account with <strong>Butt Networks Admin Panel</strong>.</p>
+          <ul>
+            <li>🔒 Secure login</li>
+            <li>📡 Encrypted data</li>
+            <li>🛡️ Role-based access</li>
+            <li>👀 Real-time monitoring</li>
           </ul>
-          <p style="font-size: 16px; color: #333;">
-            You can now access your dashboard and manage your account securely.
-          </p>
-          <a href="http://localhost:3000" 
-            style="display: inline-block; background: #0a58ca; color: #fff; text-decoration: none; padding: 12px 20px; border-radius: 5px; margin-top: 20px;">
+          <a href="http://localhost:3000"
+            style="display:inline-block;background:#0a58ca;color:#fff;padding:12px 20px;border-radius:5px;text-decoration:none;">
             Go to Dashboard
           </a>
-          <p style="font-size: 12px; color: #999; margin-top: 20px; text-align: center;">
-            If you did not create this account, please ignore this email.
-          </p>
         </div>
       </div>
       `,
     };
 
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        console.error("Email failed:", err);
-      } else {
-        console.log("Email sent:", info.response);
-      }
+    transporter.sendMail(mailOptions, (err) => {
+      if (err) console.error("Email failed:", err);
     });
 
     res.json({ message: "Signup successful" });
@@ -103,7 +94,6 @@ router.post("/signup", async (req, res) => {
     res.status(500).json({ message: "Signup failed" });
   }
 });
-
 
 /* ======================
    LOGIN
@@ -115,8 +105,13 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ message: "Missing credentials" });
 
   try {
-    const user = await User.findOne({ email, pass });
+    const user = await User.findOne({ email });
     if (!user)
+      return res.status(401).json({ message: "Invalid credentials" });
+
+    // 🔐 COMPARE PASSWORD
+    const isMatch = await bcrypt.compare(pass, user.pass);
+    if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
@@ -127,14 +122,14 @@ router.post("/login", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: false, // change to true in production
       sameSite: "lax",
       maxAge: 60 * 60 * 1000,
     });
 
     res.json({ message: "Login successful" });
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Login failed" });
   }
 });
@@ -163,7 +158,7 @@ router.get("/main-app", protect, (req, res) => {
 });
 
 /* ======================
-   CURRENT USER (/me)
+   CURRENT USER
 ====================== */
 router.get("/me", protect, async (req, res) => {
   try {
@@ -191,9 +186,8 @@ router.delete("/delete-account", protect, async (req, res) => {
       email: req.user.email,
     });
 
-    if (!deletedUser) {
+    if (!deletedUser)
       return res.status(404).json({ message: "User not found" });
-    }
 
     res.clearCookie("token", {
       httpOnly: true,
