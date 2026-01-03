@@ -1,15 +1,16 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const router = express.Router();
+const nodemailer = require("nodemailer");
 const User = require("../Database/users");
 const protect = require("../middleware/protect");
-const nodemailer = require("nodemailer");
+const isLoggedIn = require("../middleware/isLoggedIn");
 
+const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 /* ======================
-   Nodemailer Transport
+   NODEMAILER TRANSPORT
 ====================== */
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -19,10 +20,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
 /* ======================
    SIGNUP
 ====================== */
-router.post("/signup", async (req, res) => {
+router.post("/signup", isLoggedIn, async (req, res) => {
   const { name, email, pass, company, role } = req.body;
 
   if (!name || !email || !pass)
@@ -33,7 +35,6 @@ router.post("/signup", async (req, res) => {
     if (existingUser)
       return res.status(409).json({ message: "User already exists" });
 
-    // 🔐 HASH PASSWORD
     const hashedPassword = await bcrypt.hash(pass, 12);
 
     const user = await User.create({
@@ -45,47 +46,27 @@ router.post("/signup", async (req, res) => {
     });
 
     const token = jwt.sign(
-      { email: user.email, name: user.name },
+      { uid: user._id, email: user.email, name: user.name },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // change to true in production
+      secure: false, // true in production
       sameSite: "lax",
       maxAge: 60 * 60 * 1000,
     });
 
-    /* ======================
-       SEND WELCOME EMAIL
-    ====================== */
-    const mailOptions = {
+    transporter.sendMail({
       from: `"Butt Networks" <${process.env.EMAIL_USER}>`,
       to: user.email,
       subject: "Welcome to Butt Networks Admin Panel",
       html: `
-      <div style="font-family: Arial, sans-serif; background: #f4f4f4; padding: 30px;">
-        <div style="max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 10px;">
-          <h1 style="color: #0a58ca; text-align: center;">Welcome, ${user.name}!</h1>
-          <p>Thank you for creating an account with <strong>Butt Networks Admin Panel</strong>.</p>
-          <ul>
-            <li>🔒 Secure login</li>
-            <li>📡 Encrypted data</li>
-            <li>🛡️ Role-based access</li>
-            <li>👀 Real-time monitoring</li>
-          </ul>
-          <a href="http://localhost:3000"
-            style="display:inline-block;background:#0a58ca;color:#fff;padding:12px 20px;border-radius:5px;text-decoration:none;">
-            Go to Dashboard
-          </a>
-        </div>
-      </div>
+        <h2>Welcome, ${user.name}!</h2>
+        <p>Your admin panel account is ready.</p>
+        <a href="http://localhost:3000">Go to Dashboard</a>
       `,
-    };
-
-    transporter.sendMail(mailOptions, (err) => {
-      if (err) console.error("Email failed:", err);
     });
 
     res.json({ message: "Signup successful" });
@@ -98,7 +79,7 @@ router.post("/signup", async (req, res) => {
 /* ======================
    LOGIN
 ====================== */
-router.post("/login", async (req, res) => {
+router.post("/login", isLoggedIn, async (req, res) => {
   const { email, pass } = req.body;
 
   if (!email || !pass)
@@ -109,7 +90,6 @@ router.post("/login", async (req, res) => {
     if (!user)
       return res.status(401).json({ message: "Invalid credentials" });
 
-    // 🔐 COMPARE PASSWORD
     const isMatch = await bcrypt.compare(pass, user.pass);
     if (!isMatch)
       return res.status(401).json({ message: "Invalid credentials" });
@@ -122,7 +102,7 @@ router.post("/login", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // change to true in production
+      secure: false,
       sameSite: "lax",
       maxAge: 60 * 60 * 1000,
     });
@@ -147,12 +127,12 @@ router.post("/logout", (req, res) => {
 });
 
 /* ======================
-   PROTECTED ROUTE
+   MAIN APP (PROTECTED)
 ====================== */
 router.get("/main-app", protect, (req, res) => {
   res.json({
     heading: "Welcome to",
-    message: "Secure Admin-Panel",
+    message: "Secure Admin Panel",
     user: req.user.name,
   });
 });
@@ -162,17 +142,12 @@ router.get("/main-app", protect, (req, res) => {
 ====================== */
 router.get("/me", protect, async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.user.email }).select("-pass");
+    const user = await User.findById(req.user.uid).select("-pass");
     if (!user)
       return res.status(404).json({ message: "User not found" });
 
-    res.json({
-      name: user.name,
-      email: user.email,
-      company: user.company,
-      role: user.role,
-    });
-  } catch (err) {
+    res.json(user);
+  } catch {
     res.status(500).json({ message: "Failed to fetch user" });
   }
 });
@@ -182,12 +157,7 @@ router.get("/me", protect, async (req, res) => {
 ====================== */
 router.delete("/delete-account", protect, async (req, res) => {
   try {
-    const deletedUser = await User.findOneAndDelete({
-      email: req.user.email,
-    });
-
-    if (!deletedUser)
-      return res.status(404).json({ message: "User not found" });
+    await User.findByIdAndDelete(req.user.uid);
 
     res.clearCookie("token", {
       httpOnly: true,
@@ -196,8 +166,7 @@ router.delete("/delete-account", protect, async (req, res) => {
     });
 
     res.json({ message: "Account deleted successfully" });
-  } catch (err) {
-    console.error(err);
+  } catch {
     res.status(500).json({ message: "Failed to delete account" });
   }
 });

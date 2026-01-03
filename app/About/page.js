@@ -35,6 +35,53 @@ const About = () => {
           </a>
         </header>
       </section>
+
+{/* Main Points */}
+<section className="mt-20 px-4">
+  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    {/* Role Card */}
+    <div className="flex items-start gap-4 bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+      <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 text-blue-600 text-xl">
+        🧳
+      </div>
+
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900">Role</h2>
+        <p className="mt-2 text-gray-600 text-sm leading-relaxed">
+          Full-Stack Engineer — owned end-to-end design and implementation of
+          client & developer workflows, GitHub integration, and CI/CD automation.
+        </p>
+      </div>
+    </div>
+
+    {/* Constraints Card */}
+    <div className="flex items-start gap-4 bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+      <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gray-100 text-gray-700 text-xl">
+        ✅
+      </div>
+
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900">Constraints</h2>
+        <p className="mt-2 text-gray-600 text-sm leading-relaxed">
+          MVP in 8 weeks, role-based access, secure logins, enterprise-grade data
+          isolation, limited budget for external integrations.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {/* Networks Problems*/}
+  <div className="mt-15 flex flex-col justify-center items-center">
+    <div className="w-full h-20 bg-white border border-gray-200">
+      <div className="flex gap-5 items-center justify-start">
+        <h1>🛜</h1>
+        <h1>Problem</h1>
+      </div>
+    </div>
+  </div> 
+</section>
+
       <Footer />
     </>
   );
