@@ -44,7 +44,8 @@ const ChartsData = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/language", {
+      const origin = process.env.NEXT_PUBLIC_ORIGIN
+      const response = await fetch(`${origin}/api/language`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

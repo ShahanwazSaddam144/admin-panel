@@ -49,7 +49,8 @@ const ProjectsData = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/me", {
+        const origin = process.env.NEXT_PUBLIC_ORIGIN
+        const res = await fetch(`${origin}/api/me`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -67,7 +68,8 @@ const ProjectsData = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await fetch("http://localhost:5000/projects", {
+        const origin = process.env.NEXT_PUBLIC_ORIGIN
+        const res = await fetch(`${origin}/api/projects`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -97,8 +99,9 @@ const ProjectsData = () => {
   ====================== */
   const handleDelete = async () => {
     try {
+      const origin = process.env.NEXT_PUBLIC_ORIGIN
       const res = await fetch(
-        `http://localhost:5000/projects/${deleteProjectId}`,
+        `${origin}/api/projects/${deleteProjectId}`,
         {
           method: "DELETE",
           credentials: "include",

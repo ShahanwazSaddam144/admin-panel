@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
-import ProjectsData from "../components/ProjectsData";
 import WelcomePanel from "../components/WelcomePanel";
 import ProjectDetails from "../ProjectDetails/ProjectDetails";
 import Footer from "../components/Footer";
@@ -15,7 +14,9 @@ const Main = () => {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        const res = await fetch("http://localhost:5000/main-app", {
+        const origin = process.env.NEXT_PUBLIC_ORIGIN
+
+        const res = await fetch(`${origin}/api/main-app`, {
           method: "GET",
           credentials: "include", 
         });
