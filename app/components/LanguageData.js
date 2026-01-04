@@ -26,7 +26,8 @@ const LanguageData = () => {
   useEffect(() => {
     const fetchLanguageNotes = async () => {
       try {
-        const res = await fetch("http://localhost:5000/language", {
+        const origin = process.env.NEXT_PUBLIC_ORIGIN
+        const res = await fetch(`${origin}/api/language`, {
           method: "GET",
           credentials: "include",
         });
@@ -51,7 +52,8 @@ const LanguageData = () => {
   ====================== */
   const confirmDelete = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/language/${selectedId}`, {
+      const origin = process.env.NEXT_PUBLIC_ORIGIN
+      const res = await fetch(`${origin}/api/language/${selectedId}`, {
         method: "DELETE",
         credentials: "include",
       });

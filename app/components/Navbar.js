@@ -14,7 +14,8 @@ const Navbar = () => {
      LOGOUT
   ====================== */
   const handleLogout = async () => {
-    await fetch("http://localhost:5000/logout", {
+    const origin = process.env.NEXT_PUBLIC_ORIGIN
+    await fetch(`${origin}/api/auth/logout`, {
       method: "POST",
       credentials: "include",
     });
@@ -27,7 +28,8 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/me", {
+        const origin = process.env.NEXT_PUBLIC_ORIGIN
+        const res = await fetch(`${origin}/api/me`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -64,7 +66,7 @@ const Navbar = () => {
                 cursor-pointer hover:bg-blue-600 transition"
                 title="Profile"
               >
-                {user.name.charAt(0).toUpperCase()}
+                {user.name && user.name.charAt(0).toUpperCase()}
               </div>
             )}
 
@@ -96,12 +98,9 @@ const Navbar = () => {
           {/* Sidebar */}
           <aside className="fixed right-0 top-0 h-full w-80 bg-white z-50 shadow-2xl animate-slide-in">
             <div className="p-6 flex flex-col h-full">
-
               {/* Header */}
               <div className="flex justify-between items-center mb-8">
-                <h2 className="text-xl font-bold text-gray-800">
-                  Menu
-                </h2>
+                <h2 className="text-xl font-bold text-gray-800">Menu</h2>
                 <button
                   onClick={() => setMenu(false)}
                   className="text-gray-500 hover:text-gray-800 text-2xl"
@@ -112,7 +111,6 @@ const Navbar = () => {
 
               {/* Links */}
               <nav className="flex flex-col gap-4 text-gray-700">
-
                 <Link
                   href="/Admin-Dashboard"
                   onClick={() => setMenu(false)}
@@ -169,7 +167,6 @@ const Navbar = () => {
                 >
                   Our Website
                 </a>
-
               </nav>
 
               {/* Divider */}

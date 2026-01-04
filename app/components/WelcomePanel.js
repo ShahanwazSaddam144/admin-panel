@@ -20,7 +20,8 @@ const WelcomePanel = () => {
   useEffect(() => {
     const fetchProtected = async () => {
       try {
-        const res = await fetch("http://localhost:5000/main-app", {
+        const origin = process.env.NEXT_PUBLIC_ORIGIN
+        const res = await fetch(`${origin}/api/main-app`, {
           credentials: "include",
           headers: { "Content-Type": "application/json" },
         });

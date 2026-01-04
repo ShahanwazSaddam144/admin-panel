@@ -73,7 +73,8 @@ const ProjectsManager = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/projects", {
+      const origin = process.env.NEXT_PUBLIC_ORIGIN
+      const response = await fetch(`${origin}/api/projects`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

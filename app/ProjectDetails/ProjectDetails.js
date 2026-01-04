@@ -21,7 +21,8 @@ const ProjectDetails = () => {
   ====================== */
   const fetchProjects = async () => {
     try {
-      const res = await fetch("http://localhost:5000/projects", {
+      const origin = process.env.NEXT_PUBLIC_ORIGIN
+      const res = await fetch(`${origin}/api/projects`, {
         method: "GET",
         credentials: "include",
       });
@@ -107,7 +108,7 @@ const handleSearchProjects = () => {
                 pagination={{ clickable: true }}
                 centeredSlides={filteredProjects.length === 1}
                 loop={filteredProjects.length > 1}
-                className="!w-full"
+                className="w-full!"
               >
                 {filteredProjects.map((project) => {
                   const progress = calculateProgress(
@@ -119,7 +120,7 @@ const handleSearchProjects = () => {
                   return (
                     <SwiperSlide
                       key={project._id}
-                      className="flex justify-center !w-full"
+                      className="flex justify-center w-full!"
                     >
                       <div className="w-full rounded-2xl p-6 shadow-lg hover:shadow-2xl transition duration-300 bg-white">
                         <h2 className="text-2xl font-semibold mb-2 text-gray-800">
