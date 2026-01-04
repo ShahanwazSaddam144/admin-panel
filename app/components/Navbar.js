@@ -154,7 +154,7 @@ const Navbar = () => {
                 </Link>
 
                 <Link
-                  href="/faq"
+                  href="/FAQ"
                   onClick={() => setMenu(false)}
                   className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
                 >

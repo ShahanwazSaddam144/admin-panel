@@ -99,7 +99,7 @@ const ChartsData = () => {
               placeholder="Enter Language Name"
               value={formData.LanguageName}
               onChange={handleChange}
-              className="border border-gray-300 h-24 w-full rounded-lg p-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="border border-gray-300 h-10 w-full rounded-lg p-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -126,7 +126,7 @@ const ChartsData = () => {
     name="Category"
     value={formData.Category}
     onChange={handleChange}
-    className="border border-gray-300 h-24 w-full rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    className="border border-gray-300 h-10 w-full rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
   >
     <option value="">Select Category</option>
     <option value="Frontend">Frontend</option>
@@ -147,7 +147,7 @@ const ChartsData = () => {
     name="Difficulty"
     value={formData.Difficulty}
     onChange={handleChange}
-    className="border border-gray-300 h-24 w-full rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    className="border border-gray-300 h-10 w-full rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
   >
     <option value="">Select Difficulty</option>
     <option value="Beginner">Beginner</option>
@@ -168,7 +168,7 @@ const ChartsData = () => {
               placeholder="Enter Language Released Date"
               value={formData.ReleasedYear}
               onChange={handleChange}
-              className="border border-gray-300 h-24 w-full rounded-lg p-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="border border-gray-300 h-10 w-full rounded-lg p-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -198,7 +198,7 @@ const ChartsData = () => {
               placeholder="Enter Language Website Name"
               value={formData.Website}
               onChange={handleChange}
-              className="border border-gray-300 h-24 w-full rounded-lg p-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="border border-gray-300 h-10 w-full rounded-lg p-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -212,7 +212,7 @@ const ChartsData = () => {
               placeholder="Enter Languages Case"
               value={formData.UseCases}
               onChange={handleChange}
-              className="border border-gray-300 h-24 w-full rounded-lg p-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="border border-gray-300 h-10 w-full rounded-lg p-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
