@@ -13,7 +13,8 @@ const Home_ = () => {
      AUTO LOGIN CHECK
   ====================== */
   useEffect(() => {
-    fetch("http://localhost:5000/me", {
+    const origin = process.env.NEXT_PUBLIC_ORIGIN
+    fetch(`${origin}/api/me`, {
       credentials: "include",
     })
       .then((res) => {

@@ -53,9 +53,10 @@ export default function AuthPage() {
     const pass = password;
 
     try {
+      const origin = process.env.NEXT_PUBLIC_ORIGIN;
       const endpoint = isSignup
-        ? "http://localhost:5000/signup"
-        : "http://localhost:5000/login";
+        ? `${origin}/api/auth/signup`
+        : `${origin}/api/auth/login`;
 
       const bodyData = isSignup
         ? { name, email, pass, company, role }
@@ -80,7 +81,8 @@ export default function AuthPage() {
       } else {
         setError(data.message || "Authentication failed");
       }
-    } catch {
+    } catch(e) {
+      console.error(e)
       setError("Server not reachable");
     } finally {
       setLoading(false);
@@ -92,55 +94,56 @@ export default function AuthPage() {
   ====================== */
   const passwordStrength = () => {
     if (password.length < 8) return "Weak";
-    if (password.match(/[A-Z]/) && password.match(/[0-9]/))
-      return "Strong";
+    if (password.match(/[A-Z]/) && password.match(/[0-9]/)) return "Strong";
     return "Good";
   };
 
   return (
     <section className="min-h-screen flex flex-col md:flex-row">
-     {/* LEFT */}
-<div className="md:w-1/2 relative flex items-center justify-center p-10 text-white 
-                bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 overflow-hidden">
-  <div className="relative z-10">
-    <Image
-      src="/butt.png"
-      alt="Butt Networks"
-      width={150}
-      height={150}
-      className="mx-auto rounded-full mb-6"
-    />
-    <h1 className="text-4xl font-bold mb-3">
-      Butt Networks
-      <span className="text-yellow-300"> Admin Panel</span>
-    </h1>
-    <p className="mb-4">
-      {isSignup
-        ? "Create your account to get started."
-        : "Login to access your admin dashboard."}
-    </p>
+      {/* LEFT */}
+      <div
+        className="md:w-1/2 relative flex items-center justify-center p-10 text-white 
+                bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 overflow-hidden"
+      >
+        <div className="relative z-10">
+          <Image
+            src="/butt.png"
+            alt="Butt Networks"
+            width={150}
+            height={150}
+            className="mx-auto rounded-full mb-6"
+          />
+          <h1 className="text-4xl font-bold mb-3">
+            Butt Networks
+            <span className="text-yellow-300"> Admin Panel</span>
+          </h1>
+          <p className="mb-4">
+            {isSignup
+              ? "Create your account to get started."
+              : "Login to access your admin dashboard."}
+          </p>
 
-    {/* SECURITY POINTS */}
-    <ul className="space-y-4 mt-4">
-      <li className="text-green-300 font-semibold opacity-0 animate-fadeIn">
-        🔒 Secure login with strong password enforcement
-      </li>
-      <li className="text-yellow-300 font-semibold opacity-0 animate-fadeIn delay-200">
-        📡 Encrypted data transmission for all user info
-      </li>
-      <li className="text-blue-200 font-semibold opacity-0 animate-fadeIn delay-400">
-        🛡️ Role-based access control for sensitive actions
-      </li>
-      <li className="text-pink-300 font-semibold opacity-0 animate-fadeIn delay-600">
-        👀 Real-time monitoring of suspicious activity
-      </li>
-    </ul>
-  </div>
+          {/* SECURITY POINTS */}
+          <ul className="space-y-4 mt-4">
+            <li className="text-green-300 font-semibold opacity-0 animate-fadeIn">
+              🔒 Secure login with strong password enforcement
+            </li>
+            <li className="text-yellow-300 font-semibold opacity-0 animate-fadeIn delay-200">
+              📡 Encrypted data transmission for all user info
+            </li>
+            <li className="text-blue-200 font-semibold opacity-0 animate-fadeIn delay-400">
+              🛡️ Role-based access control for sensitive actions
+            </li>
+            <li className="text-pink-300 font-semibold opacity-0 animate-fadeIn delay-600">
+              👀 Real-time monitoring of suspicious activity
+            </li>
+          </ul>
+        </div>
 
-  {/* Decorative circles */}
-  <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-500 rounded-full opacity-30 blur-3xl"></div>
-  <div className="absolute bottom-10 right-20 w-32 h-32 bg-blue-400 rounded-full opacity-20 blur-2xl"></div>
-</div>
+        {/* Decorative circles */}
+        <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-500 rounded-full opacity-30 blur-3xl"></div>
+        <div className="absolute bottom-10 right-20 w-32 h-32 bg-blue-400 rounded-full opacity-20 blur-2xl"></div>
+      </div>
 
       {/* RIGHT */}
       <div className="md:w-1/2 flex items-center justify-center p-10">
@@ -219,11 +222,7 @@ export default function AuthPage() {
             disabled={loading || (isSignup && passwordError)}
             className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
           >
-            {loading
-              ? "Processing..."
-              : isSignup
-              ? "Sign Up"
-              : "Login"}
+            {loading ? "Processing..." : isSignup ? "Sign Up" : "Login"}
           </button>
 
           <p

@@ -16,7 +16,8 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/me", {
+        const origin = process.env.NEXT_PUBLIC_ORIGIN
+        const res = await fetch(`${origin}/api/me`, {
           credentials: "include",
         });
         const data = await res.json();
@@ -33,7 +34,8 @@ const UserProfile = () => {
   ====================== */
   const confirmDeleteAccount = async () => {
     try {
-      await fetch("http://localhost:5000/delete-account", {
+      const origin = process.env.NEXT_PUBLIC_ORIGIN
+      await fetch(`${origin}/api/auth/delete-account`, {
         method: "DELETE",
         credentials: "include",
       });
