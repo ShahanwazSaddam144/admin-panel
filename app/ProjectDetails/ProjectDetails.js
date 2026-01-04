@@ -21,7 +21,7 @@ const ProjectDetails = () => {
   ====================== */
   const fetchProjects = async () => {
     try {
-      const origin = process.env.NEXT_PUBLIC_ORIGIN
+      const origin = process.env.NEXT_PUBLIC_ORIGIN;
       const res = await fetch(`${origin}/api/projects`, {
         method: "GET",
         credentials: "include",
@@ -48,15 +48,15 @@ const ProjectDetails = () => {
     fetchProjects();
   }, []);
 
-/* ======================
-   SEARCH FUNCTIONALITY
-====================== */
-const handleSearchProjects = () => {
-  const filtered = projects.filter((project) =>
-    project.ProjectName.toLowerCase().includes(search.toLowerCase())
-  );
-  setFilteredProjects(filtered);
-};
+  /* ======================
+     SEARCH FUNCTIONALITY
+  ====================== */
+  const handleSearchProjects = () => {
+    const filtered = projects.filter((project) =>
+      project.ProjectName.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredProjects(filtered);
+  };
 
   /* ======================
      PROGRESS + STATUS
@@ -95,6 +95,20 @@ const handleSearchProjects = () => {
         )}
 
         {error && <p className="text-center text-red-500">{error}</p>}
+
+        {/* ✅ FIXED: zero projects check moved OUTSIDE */}
+        {!loading && projects.length === 0 && (
+          <>
+            <p className="text-center text-gray-500 mb-6">
+              No projects found.
+            </p>
+            <Link href="/ProjectPanel">
+              <button className="block mx-auto bg-blue-600 text-white px-8 py-2 rounded-md">
+                Create Your First Project
+              </button>
+            </Link>
+          </>
+        )}
 
         {!loading && projects.length > 0 && (
           <div className="flex gap-6 flex-wrap lg:flex-nowrap">
@@ -137,13 +151,11 @@ const handleSearchProjects = () => {
                         </div>
 
                         <span
-                          className={`inline-block mb-3 px-3 py-1 rounded-full text-sm font-medium
-                            ${
-                              status === "Completed"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-yellow-100 text-yellow-700"
-                            }
-                          `}
+                          className={`inline-block mb-3 px-3 py-1 rounded-full text-sm font-medium ${
+                            status === "Completed"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }`}
                         >
                           {status}
                         </span>
@@ -176,18 +188,6 @@ const handleSearchProjects = () => {
               </Swiper>
             </div>
 
-            {!loading && projects.length === 0 && (
-          <>
-            <p className="text-center text-gray-500 mb-6">No projects found.</p>
-            <Link href="/ProjectPanel">
-              <button className="block mx-auto bg-blue-600 text-white px-8 py-2 rounded-md">
-                Create Your First Project
-              </button>
-            </Link>
-          </>
-        )}
-
-
             {/* ===== SEARCH PANEL ===== */}
             <div className="w-72 flex-shrink-0 bg-white p-6 rounded-2xl shadow-lg sticky top-24 h-fit">
               <h3 className="text-xl font-semibold mb-4 text-gray-800">
@@ -199,8 +199,8 @@ const handleSearchProjects = () => {
                 placeholder="Search by project name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e)=>{
-                  if (e.key === "Enter"){
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
                     handleSearchProjects();
                   }
                 }}
@@ -209,8 +209,7 @@ const handleSearchProjects = () => {
 
               <button
                 onClick={handleSearchProjects}
-                className="bg-blue-600 px-6 py-2 hover:bg-blue-700 rounded-[5px]
-                text-white mt-5"
+                className="bg-blue-600 px-6 py-2 hover:bg-blue-700 rounded-[5px] text-white mt-5"
               >
                 Search
               </button>
