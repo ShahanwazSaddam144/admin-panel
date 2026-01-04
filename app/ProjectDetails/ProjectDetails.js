@@ -176,6 +176,18 @@ const handleSearchProjects = () => {
               </Swiper>
             </div>
 
+            {!loading && projects.length === 0 && (
+          <>
+            <p className="text-center text-gray-500 mb-6">No projects found.</p>
+            <Link href="/ProjectPanel">
+              <button className="block mx-auto bg-blue-600 text-white px-8 py-2 rounded-md">
+                Create Your First Project
+              </button>
+            </Link>
+          </>
+        )}
+
+
             {/* ===== SEARCH PANEL ===== */}
             <div className="w-72 flex-shrink-0 bg-white p-6 rounded-2xl shadow-lg sticky top-24 h-fit">
               <h3 className="text-xl font-semibold mb-4 text-gray-800">
