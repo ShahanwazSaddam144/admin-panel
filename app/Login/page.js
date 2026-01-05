@@ -18,9 +18,6 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  /* ======================
-     PASSWORD VALIDATION
-  ====================== */
   const validatePassword = (value) => {
     setPassword(value);
 
@@ -36,9 +33,6 @@ export default function AuthPage() {
     }
   };
 
-  /* ======================
-     AUTH HANDLER
-  ====================== */
   const handleAuth = async () => {
     if (isSignup && passwordError) return;
 
@@ -81,17 +75,14 @@ export default function AuthPage() {
       } else {
         setError(data.message || "Authentication failed");
       }
-    } catch(e) {
-      console.error(e)
+    } catch (e) {
+      console.error(e);
       setError("Server not reachable");
     } finally {
       setLoading(false);
     }
   };
 
-  /* ======================
-     PASSWORD STRENGTH
-  ====================== */
   const passwordStrength = () => {
     if (password.length < 8) return "Weak";
     if (password.match(/[A-Z]/) && password.match(/[0-9]/)) return "Strong";
@@ -101,10 +92,7 @@ export default function AuthPage() {
   return (
     <section className="min-h-screen flex flex-col md:flex-row">
       {/* LEFT */}
-      <div
-        className="md:w-1/2 relative flex items-center justify-center p-10 text-white 
-                bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 overflow-hidden"
-      >
+      <div className="md:w-1/2 relative flex items-center justify-center p-10 text-white bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700 overflow-hidden">
         <div className="relative z-10">
           <Image
             src="/butt.png"
@@ -114,8 +102,7 @@ export default function AuthPage() {
             className="mx-auto rounded-full mb-6"
           />
           <h1 className="text-4xl font-bold mb-3">
-            Butt Networks
-            <span className="text-yellow-300"> Admin Panel</span>
+            Butt Networks <span className="text-yellow-300">Admin Panel</span>
           </h1>
           <p className="mb-4">
             {isSignup
@@ -123,31 +110,27 @@ export default function AuthPage() {
               : "Login to access your admin dashboard."}
           </p>
 
-          {/* SECURITY POINTS */}
           <ul className="space-y-4 mt-4">
-            <li className="text-green-300 font-semibold opacity-0 animate-fadeIn">
+            <li className="text-green-300 font-semibold">
               🔒 Secure login with strong password enforcement
             </li>
-            <li className="text-yellow-300 font-semibold opacity-0 animate-fadeIn delay-200">
+            <li className="text-yellow-300 font-semibold">
               📡 Encrypted data transmission for all user info
             </li>
-            <li className="text-blue-200 font-semibold opacity-0 animate-fadeIn delay-400">
+            <li className="text-blue-200 font-semibold">
               🛡️ Role-based access control for sensitive actions
             </li>
-            <li className="text-pink-300 font-semibold opacity-0 animate-fadeIn delay-600">
+            <li className="text-pink-300 font-semibold">
               👀 Real-time monitoring of suspicious activity
             </li>
           </ul>
         </div>
-
-        {/* Decorative circles */}
-        <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-500 rounded-full opacity-30 blur-3xl"></div>
-        <div className="absolute bottom-10 right-20 w-32 h-32 bg-blue-400 rounded-full opacity-20 blur-2xl"></div>
       </div>
 
       {/* RIGHT */}
-      <div className="md:w-1/2 flex items-center justify-center p-10">
-        <div className="w-full max-w-md bg-white/10 backdrop-blur-md p-10 rounded-3xl shadow-xl">
+      <div className="md:w-1/2 w-full flex items-center justify-center p-6">
+        {/* 🔽 ONLY RESPONSIVE FIX HERE */}
+        <div className="w-full md:max-w-md bg-white/10 backdrop-blur-md p-10 rounded-3xl shadow-xl">
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
             {isSignup ? "Sign Up" : "Login"}
           </h2>
@@ -166,7 +149,6 @@ export default function AuthPage() {
             className="mb-4 w-full px-4 py-3 rounded-xl text-black"
           />
 
-          {/* PASSWORD */}
           <div className="relative mb-2">
             <input
               id="pass"
@@ -185,23 +167,13 @@ export default function AuthPage() {
             </button>
           </div>
 
-          {/* PASSWORD FEEDBACK */}
           {isSignup && (
-            <p
-              className={`text-sm mb-4 ${
-                passwordStrength() === "Strong"
-                  ? "text-green-500"
-                  : passwordStrength() === "Good"
-                  ? "text-yellow-500"
-                  : "text-red-500"
-              }`}
-            >
+            <p className="text-sm mb-4">
               Password strength: {passwordStrength()}
               {passwordError && ` • ${passwordError}`}
             </p>
           )}
 
-          {/* COMPANY & ROLE */}
           {isSignup && (
             <div className="flex flex-col md:flex-row gap-4 mb-4">
               <input
@@ -238,7 +210,6 @@ export default function AuthPage() {
         </div>
       </div>
 
-      {/* SUCCESS TOAST */}
       {success && (
         <div className="fixed bottom-6 right-6 bg-green-600 text-white px-6 py-4 rounded-xl shadow-lg">
           {success}
