@@ -47,6 +47,7 @@ export default function AuthPage() {
     const pass = password;
 
     try {
+
       const origin = process.env.NEXT_PUBLIC_ORIGIN;
       const endpoint = isSignup
         ? `${origin}/api/auth/signup`

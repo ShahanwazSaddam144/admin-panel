@@ -112,14 +112,6 @@ const Navbar = () => {
               {/* Links */}
               <nav className="flex flex-col gap-4 text-gray-700">
                 <Link
-                  href="/Admin-Dashboard"
-                  onClick={() => setMenu(false)}
-                  className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
-                >
-                  Dashboard
-                </Link>
-
-                <Link
                   href="/ProjectPanel"
                   onClick={() => setMenu(false)}
                   className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
@@ -157,6 +149,14 @@ const Navbar = () => {
                   className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
                 >
                   FAQ
+                </Link>
+
+                  <Link
+                  href="/Team"
+                  onClick={() => setMenu(false)}
+                  className="px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
+                  Team
                 </Link>
 
                 <a

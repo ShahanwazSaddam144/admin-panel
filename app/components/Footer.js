@@ -73,7 +73,7 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="mt-6 text-center text-gray-600 text-sm">
-          © {new Date().getFullYear()} ButtNetworks Admin-Panel. All rights reserved.
+          © {new Date().getFullYear()} ButtNetworks Admin-Dashboard. All rights reserved.
         </div>
       </div>
     </footer>
